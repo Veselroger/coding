@@ -1,7 +1,23 @@
 # Coding tasks workbook
 
-Вдохновлённый Владом Тен и его youtube каналом про **"[LeetCode Patterns](https://www.youtube.com/watch?v=92_ZmKjtfxA&list=PLyHj6yBbnkUgC6T9RpPxEBUv3My9lPd7m&index=1)"** я решил повторить те же задачи, но на Java и составить небольшой конспект.
+[Влад Тен](https://www.linkedin.com/in/vladten/) однажды делал разбор [LeetCode Patterns](https://seanprashad.com/leetcode-patterns/).\
+Идея в том, что задачи на алгоритмы важны не сами по себе. Они тренируют "чутьё" на шаблоны.
+
+К сожалению, канал Влада был удалён, однако идея жива. Сделаем разбор тех же задач.\
+Отдельное спасибо за разборы youtube каналам:
+- [NeetCode](https://www.youtube.com/@NeetCode)
+- [Nick White](https://www.youtube.com/@NickWhite)
+
+В качестве инструмента визуализации можно воспользоваться **[excalidraw](https://excalidraw.com/)**.\
+В качестве музыкального сопровождения подойдёт, например, Lo-Fi вроде [Abao in Tokyo](https://www.youtube.com/@abaointokyo/featured) или [Lo-Fi girl](https://www.youtube.com/c/lofigirl). =)
 
 **Темы:**
-- [Contains Duplicate](Duplicates.md)
-- [Missing Number](MissingNumber.md)
+- [Duplicates](pages/Duplicates.md)
+- [Missing Number](pages/MissingNumber.md)
+- [Climbing Stairs](pages/ClimbingStairs.md)
+- [Best Time to Buy and Sell Stock](pages/BestTimetoBuyAndSell.md)
+- [Range Sum Query](pages/RangeSumQuery.md)
+- [Counting Bits](pages/CountingBits.md)
+- [Linked List problems](pages/LinkedLists.md)
+- [Meeting Rooms](pages/MeetingRooms.md)
+- [Binary Search](pages/BinarySearch.md)
