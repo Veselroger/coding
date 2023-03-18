@@ -394,3 +394,24 @@ public TreeNode helper(int[] nums, int l, int r) {
 ## [↑](#home) <a id="lowest"></a> Lowest Common Ancestor of a Binary Search Tree
 Рассмотрим задачу [Lowest Common Ancestor of a Binary Search Tree](https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-search-tree/).\
 Разбор, как обычно, у NeetCode: [Lowest Common Ancestor of a Binary Search Tree](https://www.youtube.com/watch?v=gs2LMfuOR9k&list=PLot-Xpze53ldg4pN6PfzoJY7KsKcxF1jg&index=19)
+
+Если рассмотреть ситуации, то станет видно, что если оба элемента только с одной стороны - мы должны рассматривать эту сторону как подзадау. Если же элементы по разные стороны - мы нашли ответ (это текущий нод):
+
+![](../img/LowestCommonAncestor.png)
+
+Решение:
+```java
+public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+    TreeNode cur = root;
+    while(cur != null) {
+        if (p.val > cur.val && q.val > cur.val) {
+            cur = cur.right;
+        } else if (p.val < cur.val && q.val < cur.val) {
+            cur = cur.left;
+        } else {
+            return cur;
+        }
+    }
+    return cur;
+}
+```

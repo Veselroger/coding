@@ -21,3 +21,4 @@
 - [Linked List problems](pages/LinkedLists.md)
 - [Meeting Rooms](pages/MeetingRooms.md)
 - [Binary Search](pages/BinarySearch.md)
+- [Two Sum](pages/TwoSum.md)
