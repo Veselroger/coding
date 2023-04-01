@@ -12,6 +12,7 @@
 В качестве музыкального сопровождения подойдёт, например, Lo-Fi вроде [Abao in Tokyo](https://www.youtube.com/@abaointokyo/featured) или [Lo-Fi girl](https://www.youtube.com/c/lofigirl). =)
 
 **Темы:**
+**EASY**:
 - [Duplicates](pages/Duplicates.md)
 - [Missing Number](pages/MissingNumber.md)
 - [Climbing Stairs](pages/ClimbingStairs.md)
@@ -22,3 +23,6 @@
 - [Meeting Rooms](pages/MeetingRooms.md)
 - [Binary Search](pages/BinarySearch.md)
 - [Two Sum](pages/TwoSum.md)
+- [Index Pairs of a String](pages/PairsIndex.md)
+- [Majority Element](pages/Majority.md)
+- [Convert 1D Array Into 2D Array](pages/ConvertArrays.md)
