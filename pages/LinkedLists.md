@@ -25,7 +25,7 @@ Playlist разборов от NeetCode: **[NeetCode - Linked List playlist](htt
 Дан LinkedList, нужно удалить n-ный элемент с конца данного списка.\
 Данная задача про интересный подход с указателями для обхода edge cases:
 
-![](../img/LinkedListRemoveNth.png)
+![](../img/linkedlist/LinkedListRemoveNth.png)
 
 Идея заключается в том, чтобы ввести Dummy node и два указателя - правый и левый. Сдвинуть правый указатель на n позиций, а дальше мы можем двигать оба указателя одновременно. Когда правый выйдет за границу, то левый будет стоять ровно на том месте, которое нас интересует. Дальше останется соединить левый указатель в обход удаляемого элемента:
 
@@ -90,7 +90,7 @@ return dummy.next;
 ## [↑](#home) <a id="twoNumbers"></a> Add Two Numbers
 Разберём задачу **"[Add Two Numbers](https://leetcode.com/problems/add-two-numbers/)"**.
 
-![](../img/AddTwoNumbers.png)
+![](../img/linkedlist/AddTwoNumbers.png)
 
 Данная задача про хитрость с [carry](https://en.wikipedia.org/wiki/Carry_(arithmetic)), т.к. при сложении может быть перенос из одной колонки в другую:
 ```java
@@ -170,7 +170,7 @@ public ListNode middleNode(ListNode head) {
 
 Рекурсивное решение может выглядеть следующим образом:
 
-![](../img/LinkedListReverseRecursive.png)
+![](../img/linkedlist/LinkedListReverseRecursive.png)
 
 Код решения:
 ```java
@@ -190,7 +190,7 @@ public ListNode reverseList(ListNode head) {
 
 Имея текущий элемент cur мы должны его направить со следующего элемента на предыдущий. Учитывая что этот факт делает невозможным обратиться к следующему элементу мы вынуждены запоминать отдельно next элемент. Т.к. у нас односвязанный список, то предыдущий элемент (на который мы должны переключить связь) не доступен напрямую, поэтому мы должны запоминать его в переменную prev. Осталось только этим правильно "жонглировать":
 
-![](../img/LinkedListReverseIterative.png)
+![](../img/linkedlist/LinkedListReverseIterative.png)
 
 ```java
 public ListNode reverseList(ListNode head) {
@@ -222,7 +222,7 @@ public ListNode reverseList(ListNode head) {
 
 Нарисуем 2 ситуации: удаление первого элемента и удаление не первого элемента:
 
-![](../img/LinkedListRemoveElement.png)
+![](../img/linkedlist/LinkedListRemoveElement.png)
 
 Получается, нам всегда нужен предыдущий элемент, чтобы без доп проверок работал алгоритм. И как решение - можем использовать подход с так называемым "Dummy" элементом. Он сам нам не нужен, но он нужен нам как тот самый не подлажащий удалению элемент, который избавит нас от доп проверок. Тогда мы сможем применить наш алгоритм:
 
@@ -273,7 +273,7 @@ while(slow != null) {
 ```
 Выглядит эта идея следующим образом:
 
-![](../img/PalindromeLinkedList.png)
+![](../img/linkedlist/PalindromeLinkedList.png)
 
 Остаётся сама проверка на палиндром:
 ```java

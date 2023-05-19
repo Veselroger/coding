@@ -2,13 +2,14 @@
 
 Данный раздел посвящён теме поиска дубликатов, самой первой теме **[Leetcode Patterns](https://seanprashad.com/leetcode-patterns/)**.
 
-**Table of Content:**
+**Table of Contents:**
 - [Contains Duplicate](#duplicate)
     - [Two Number Sum](#twoNumber)
 - [Nearby Duplicate](#nearby)
 - [Find All Duplicates in an Array](#all)
 - [Find the duplicate number](#duplicateNumber)
 - [Nearby Almost Duplicate](#almostDuplicate)
+
 ----
 
 

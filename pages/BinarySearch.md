@@ -238,7 +238,7 @@ return true;
 
 Решение данной задачи будет рекурсивным:
 
-![](../img/BinaryTreeDiameter.png)
+![](../img/binary/BinaryTreeDiameter.png)
 
 ```java
 public int ans = 0;
@@ -351,7 +351,7 @@ public boolean hasPathSum(TreeNode root, int targetSum) {
 Разбор, как обычно, у NeetCode: [Balanced Binary Tree](https://www.youtube.com/watch?v=QfJsau0ItOY&list=PLot-Xpze53ldg4pN6PfzoJY7KsKcxF1jg).
 
 Решение, как обычно, при помощи рекурсии:
-![](../img/BalancedBinaryTree.png)
+![](../img/binary/BalancedBinaryTree.png)
 
 Код решения:
 ```java
@@ -397,7 +397,7 @@ public TreeNode helper(int[] nums, int l, int r) {
 
 Если рассмотреть ситуации, то станет видно, что если оба элемента только с одной стороны - мы должны рассматривать эту сторону как подзадау. Если же элементы по разные стороны - мы нашли ответ (это текущий нод):
 
-![](../img/LowestCommonAncestor.png)
+![](../img/binary/LowestCommonAncestor.png)
 
 Решение:
 ```java

@@ -107,34 +107,3 @@ class Solution {
 }
 ```
 
-----
-
-## [↑](#home) <a id="all"></a> Find All Numbers Disappeared in an Array
-Стоит рассмотреть так же задачу на поиск пропущенных (не обязательно только одного) чисел.\
-Задача на LeetCode: [Find All Numbers Disappeared in an Array](https://leetcode.com/problems/find-all-numbers-disappeared-in-an-array/).
-
-Интересно, что решение данной задачи похоже на решение задачи по поиску дубликатов. Разница лишь в том, как получить ответ.
-
-В задаче важно обратить внимание на условие. Дан массив из n чисел, где каждое число в диапазоне [1, n]. Получается, что число 0 не задейстовано. Это позволяет нам числа [1,n] соотнести с индексами [0,n-1]. То есть если из числа вычесть единицу, то мы можем получить индекс. На основе этого мы можем меняя массив маркировать элементы, которые мы посетили:
-
-![](../img/Missing.png)
-
-Таким образом, решение может выглядеть так:
-```java
-public List<Integer> findDisappearedNumbers(int[] nums) {
-    List<Integer> result = new ArrayList<>();
-    // For first round we don't care about indexes, only care about values
-    for (int num : nums) {
-        int indexToMark = Math.abs(num)-1;
-        nums[indexToMark] = -Math.abs(nums[indexToMark]);
-    }
-    // For the second round find indexes with positive values
-    for (int i = 0; i < nums.length; i++) {
-        // There is no value (i+i) which was visited
-        if (nums[i] >= 0) {
-            result.add(i+1);
-        }
-    }
-    return result;
-}
-```
