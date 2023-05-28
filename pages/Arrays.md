@@ -1,32 +1,33 @@
 # <a id="home"></a> Arrays and hashing
 
 Данный раздел посвящён задачам на массивы из **[Leetcode Patterns](https://seanprashad.com/leetcode-patterns/)**.\
-Кроме того, воспользумся [Roadmap](https://neetcode.io/roadmap) от NeetCode.
-
+Кроме того, воспользумся **[Roadmap](https://neetcode.io/roadmap)** от NeetCode.
 
 **Table of Contents:**
-- [Contains duplicate](#duplicate)
-- [Find pivot index](#pivot)
-- [Missing number](#missing)
-- [Two sum](#twosum)
-- [Number of Arithmetic Triplets](#triplets)
-- [Valid Anagram](#anagram)
-- [Group Anagrams](#groupAnagrams)
-- [Top K Frequent Elements](#topFrequent)
-- [Product of Array Except Self](#arrayProduct)
-- [Valid Sudoku](#sudoku)
-- [Longest Consecutive Sequence](#longest)
-- [Find all duplicates in Array](#allDuplicates)
-- [First Missing Positive](#missingPositive)
-- [Find All Numbers Disappeared in an Array](#all)
+1. [Contains duplicate](#duplicate)
+2. [Find pivot index](#pivot)
+3. [Missing number](#missing)
+4. [Two sum](#twosum)
+5. [Number of Arithmetic Triplets](#triplets)
+6. [Valid Anagram](#anagram)
+7. [Group Anagrams](#groupAnagrams)
+8. [Top K Frequent Elements](#topFrequent)
+9. [Product of Array Except Self](#arrayProduct)
+10. [Longest Consecutive Sequence](#longest)
+11. [Find all duplicates in Array](#allDuplicates)
+12. [First Missing Positive](#missingPositive)
+13. [Find All Numbers Disappeared in an Array](#all)
 
 ----
 
 ## [↑](#home) <a id="duplicate"></a> Contains duplicate
-Рассмотрим задачу "[Contains duplicate](https://leetcode.com/problems/contains-duplicate/)".\
-Разбор задачи: [NeetCode: Contains Duplicate](https://www.youtube.com/watch?v=3OamzN90kPg).
+Рассмотрим задачу **"[Contains duplicate](https://leetcode.com/problems/contains-duplicate/)"**:
+> Дан integer array. Определить: есть ли в нём дубликаты (элементы повторяются как минимум дважды). 
 
-Простая задача основанная на применении структуры hashset:
+Простая задача основанная на применении структуры **Set**:
+
+![](../img/arrays/SimpleDuplicate.png)
+
 ```java
 public boolean containsDuplicate(int[] nums) {
     Set<Integer> seen = new HashSet<>();
@@ -36,23 +37,25 @@ public boolean containsDuplicate(int[] nums) {
     return false; 
 }
 ```
+Разбор задачи от NeetCode: **"[Contains Duplicate](https://www.youtube.com/watch?v=3OamzN90kPg)"**.
 
 ----
 
 ## [↑](#home) <a id="pivot"></a> Find pivot index
-Рассмотрим задачу "[Find pivot index](https://leetcode.com/problems/find-pivot-index/)".\
-Разбор задачи: [NeetCode: Find pivot index](https://www.youtube.com/watch?v=u89i60lYx8U).
+Рассмотрим задачу **"[Find pivot index](https://leetcode.com/problems/find-pivot-index/)"**:
+> Дан array of integers. Найти pivot - элемент, суммы элементов слева и справа от которого одинаковы.
 
-![](../img/arrays/FindPivot.png)
-
-Таким образом, мы делаем своего рода кэширование - предрассчёт всей суммы, чтобы избежать постоянного перебора элементов:
+Мы можем посчитать сумму всех элементов. Тогда на основе этой суммы мы сможем высчитать половины слева и справа:
 ```java
-int ttal = 0;
+int total = 0;
 for (int num : nums) {
     total = total + num;
 }
 ```
-А дальше просто используем её для определения суммы слева и суммы справа:
+
+![](../img/arrays/FindPivot.png)
+
+А дальше просто сдвигаясь вправо накапливаем left и определяем сумму справа:
 ```java
 int left = 0;
 for (int i = 0; i < nums.length; i++) {
@@ -63,34 +66,41 @@ for (int i = 0; i < nums.length; i++) {
 }
 return -1;
 ```
+Разбор задачи от NeetCode: **"[Find pivot index](https://www.youtube.com/watch?v=u89i60lYx8U)"**.
 
 ----
 
 ## [↑](#home) <a id="missing"></a> Missing number
-Рассмотрим задачу "[Missing Number](https://leetcode.com/problems/missing-number/)".
+Рассмотрим задачу **"[Missing Number](https://leetcode.com/problems/missing-number/)"**:
+> Дан массив из N уникальных чисел в диапазоне [0, N]. Найти единственное число, которого нехватает.
 
-По условию задачи, массив из N чисел содержит числа в диапазоне [0, N]. Нужно вернуть пропущенное. Что-то это напоминает:
+В контексте данной задачи N=3 означает, что у нас есть 3 числа (размер массива). Мы знаем, что это означает максимальную сумму без пропуска в 1 + 2 + 3 = 6 (то есть сумма порядкового номера элемента). Если мы вычтем из этой суммы текущую сумму, то найдём пропуск:
 
 ![](../img/arrays/MissingNumber.png)
 
 ```java
 public int missingNumber(int[] nums) {
-    int total = 0;
-    for (int i = 0; i <= nums.length; i++) total = total + i;
-    int sum = 0;
-    for (int num : nums) sum = sum + num;
+    int total = 0, sum = 0;
+    for (int i = 0; i < nums.length; i++) {
+        total = total + (i + 1);
+        sum = sum + nums[i];
+    }
     return total - sum;
 }
 ```
+Разбор задачи от NeetCode: **"[Missing Number](https://www.youtube.com/watch?v=WnPLSRLSANE)"**.
 
 ----
 
 ## [↑](#home) <a id="twosum"></a> Two sum
-Разберём задачу **"[Two sum](https://leetcode.com/problems/two-sum/)"**.\
-Разбор задачи от NeetCode: [Two Sum - Leetcode](https://www.youtube.com/watch?v=KLlXCFG5TnA).
+Разберём задачу **"[Two sum](https://leetcode.com/problems/two-sum/)"**:
+> Дан array of integers и ожидаемая сумма (target). Вернуть индексы двух элементов дающих такую сумму.
+
+Если ``A + B = Target``, то ``Target - A = B``. Получается, что когда мы смотрим на какой-нибудь элемент, то если из общей суммы вычесть его, то мы получим значение, которое мы должны были видеть ранее (seen). Получается, опять поможет **Set**: 
 
 ![](../img/arrays/TwoSum.png)
 
+Точнее, нам понадобится Map, т.к. нам нужно ещё и помнить индексы:
 ```java
 public int[] twoSum(int[] nums, int target) {
     Map<Integer, Integer> map = new HashMap<>();
@@ -105,17 +115,19 @@ public int[] twoSum(int[] nums, int target) {
     return new int[]{};
 }
 ```
+Разбор задачи от NeetCode: **"[Two Sum - Leetcode](https://www.youtube.com/watch?v=KLlXCFG5TnA)"**.
 
 ----
 
 ## [↑](#home) <a id="triplets"></a> Number of Arithmetic Triplets
-Разберём задачу **"[Number of Arithmetic Triplets](https://leetcode.com/problems/number-of-arithmetic-triplets/)"**.
+Разберём задачу **"[Number of Arithmetic Triplets](https://leetcode.com/problems/number-of-arithmetic-triplets/)"**:
+> Дан возрастающий массив чисел и значение diff. Нужно найти количество уникальных триплетов: троек из чисел, которые отличаются друг от друга на значение diff.
 
 Визуализируем пример ``[0,1,4,6,7,10]`` для ``diff = 3``. Существует два триплета:
 
 ![](../img/arrays/Triplets.png)
 
-Само решение похоже на решение из [Two sum](#twosum):
+Таким образом решение данной задачи очень похоже на решение задачи **[Two sum](#twosum)**:
 ```java
 public int arithmeticTriplets(int[] nums, int diff) {
     int result = 0;
@@ -133,9 +145,14 @@ public int arithmeticTriplets(int[] nums, int diff) {
 ----
 
 ## [↑](#home) <a id="anagram"></a> Valid Anagram
-Разберём задачу **"[Valid Anagram](https://leetcode.com/problems/valid-anagram/)"**.\
-Разбор задачи от NeetCode: [Valid Anagram - Leetcode](https://www.youtube.com/watch?v=9UtInBqnCgA)\
-Разбор задачи от Nick White: [Valid Anagram Solution Explained](https://www.youtube.com/watch?v=IRN1VcA8CGc)
+Разберём задачу **"[Valid Anagram](https://leetcode.com/problems/valid-anagram/)"**:
+> Дано две строки s и t. Вернуть true если t анаграмма строки s, т.е. состоит из тех же символов в том же количестве.
+
+Каждый character в строке может быть приведён к соответствующем коду из [ASCII Table](https://www.cs.cmu.edu/~pattis/15-1XX/common/handouts/ascii.html). Например, ``(int)'a'`` будет равен 97. Кроме того, мы знаем, что всего в английском алфавите 26 букв.
+
+Получается, мы можем завести массив из 26 элементов. Исходная строка будет инкрементировать значения в ячейках по нужному индексу, а строка анограмма - декрементировать:
+
+![](../img/arrays/anagram.png)
 
 Решение:
 ```java
@@ -152,15 +169,20 @@ public boolean isAnagram(String s, String t) {
     return true;
 }
 ```
+Разбор задачи от NeetCode: **"[Valid Anagram - Leetcode](https://www.youtube.com/watch?v=9UtInBqnCgA)"**.\
+Разбор задачи от Nick White: **"[Valid Anagram Solution Explained](https://www.youtube.com/watch?v=IRN1VcA8CGc)"**.
 
 ----
 
 ## [↑](#home) <a id="groupAnagrams"></a> Group Anagrams
-Разберём задачу **"[Group Anagrams](https://leetcode.com/problems/group-anagrams/)"**.\
-Объяснение решение от NeetCode: [Group Anagrams - Categorize Strings by Count](https://www.youtube.com/watch?v=vzdNOK2oB2E).
-Ещё вариант от Nikhil Lohia: [Group Anagrams](https://www.youtube.com/watch?v=C9V66KyZCP8)
+Разберём задачу **"[Group Anagrams](https://leetcode.com/problems/group-anagrams/)"**:
+> Дан массив из строк. Нужно сгруппировать строки, которые являются анаграммами по спискам.
 
-Основная цель - получит по каждой строке её шаблон:
+Данная задача похожа на задачу **[Valid Anagram](#anagram)**, но для каждого слова мы анаграммы будем запоминать как шаблон. Это позволит использовать такой шаблон как ключ в мапе:
+
+![](../img/arrays/GroupAnagrams.png)
+
+Основная цель - получить по каждой строке её шаблон:
 ```java
 public String getPattern(String str) {
     int[] freq = new int[26];
@@ -170,7 +192,7 @@ public String getPattern(String str) {
     StringBuilder sb = new StringBuilder();
     for (int i = 0; i < freq.length; i++) {
         if (freq[i] != 0) {
-            sb.append((char)(i+'a'));
+            sb.append((char)(i + 'a'));
             sb.append(freq[i]);
         }
     }
@@ -194,23 +216,26 @@ public List<List<String>> groupAnagrams(String[] strs) {
     return new ArrayList<>(groups.values());
 }
 ```
+Объяснение решение от NeetCode: **"[Group Anagrams - Categorize Strings by Count](https://www.youtube.com/watch?v=vzdNOK2oB2E)"**.\
+Ещё вариант от Nikhil Lohia: **"[Group Anagrams](https://www.youtube.com/watch?v=C9V66KyZCP8)"**.
 
 ----
 
 ## [↑](#home) <a id="topFrequent"></a> Top K Frequent Elements
-Разберём задачу **"[Top K Frequent Elements](https://leetcode.com/problems/top-k-frequent-elements/)"**.\
-Объяснение решение от NeetCode: [Top K Frequent Elements](https://www.youtube.com/watch?v=YPTqKIgVk-k).\
-Разбор от Nikhil Lohia: [Top K Frequent Elements](https://www.youtube.com/watch?v=EBNPu0GgM64).
+Разберём задачу **"[Top K Frequent Elements](https://leetcode.com/problems/top-k-frequent-elements/)"**:
+> Дан массив чисел и некоторое число k. Нужно вернуть k чисел, которые встречаются чаще отстальных.
 
-В любом случае нам придётся посчитать частоту символов:
+Для решения данной задачи нам понадобится сформировать **frequency map**:
 ```java
 Map<Integer, Integer> frequencyMap = new HashMap<>();
 for (int num : nums) {
     frequencyMap.put(num, frequencyMap.getOrDefault(num, 0) + 1);
 }
 ```
+Благодаря этой мапе мы знаем, сколько было повторений для каждого числа.
 
-Далее мы используем bucket sort, где каждый бакет соответствует частоте символа. Можно заметить, что при этом массив с бакетами не будет длинее чем длина массива + 1. Например, в массиве [1,1,1] частота встречаемости символа не может быть больше чем N (т.е. чем 3). Так как мы не используем нулевой элемент, то нам нужно взять на 1 элемент больше:
+
+Далее мы используем **bucket sort**, где каждый бакет соответствует частоте символа. Минимальное значение = 1, то есть нулевой индекс мы пропускаем. А следовательно, нам нужно подготовить массив длинной N + 1 (т.к. нам нужен ещё один слот взамен нулевого):
 ```java
 List<Integer>[] bucket = new List[nums.length + 1];
 for (Integer key : frequencyMap.keySet()) {
@@ -222,7 +247,8 @@ for (Integer key : frequencyMap.keySet()) {
 }
 ```
 
-И непосредственно само вычисление результата:
+Чем более часто встречается элемент, тем он ближе к концу нашего массива bucket'ов. Посчитаем результат.\
+Важно не уйти за пределы массива и важно вернуть именно k элементов:
 ```java
 int[] result = new int[k];
 int counter = 0;
@@ -237,13 +263,16 @@ for (int pos = bucket.length - 1; pos >= 0 && counter < k; pos--) {
 return result;
 ```
 
+Объяснение решение от NeetCode: **"[Top K Frequent Elements](https://www.youtube.com/watch?v=YPTqKIgVk-k)"**.\
+Разбор от Nikhil Lohia: **"[Top K Frequent Elements](https://www.youtube.com/watch?v=EBNPu0GgM64)"**.
+
 ----
 
 ## [↑](#home) <a id="arrayProduct"></a> Product of Array Except Self
-Разберём задачу **"[Product of Array Except Self](https://leetcode.com/problems/product-of-array-except-self/)"**.\
-Объяснение решение от NeetCode: [Product of Array Except Self](https://www.youtube.com/watch?v=bNvIQI2wAjk).
+Разберём задачу **"[Product of Array Except Self](https://leetcode.com/problems/product-of-array-except-self/)"**:
+> Дан массив чисел. Вернуть массив, где вместо каждого числа будет произведение всех остальных чисел.
 
-Чтобы понять решение, нужно для начала рассмотреть частный случай. Например:
+Чтобы понять решение, рассмотрим частный случай:
 
 ![](../img/arrays/ArrayProduct.png)
 
@@ -259,7 +288,7 @@ public int[] productExceptSelf(int[] nums) {
         prefix = prefix * nums[i]; // prefix for a next iteration
     }
     int postfix = 1;
-    for (int i = nums.length-1; i >= 0; i--) {
+    for (int i = nums.length - 1; i >= 0; i--) {
         // Each result item already contains calculated prefix
         result[i] = postfix * result[i];
         postfix = postfix * nums[i]; // postfix for a next iteration
@@ -267,15 +296,19 @@ public int[] productExceptSelf(int[] nums) {
     return result;
 }
 ```
+Объяснение решение от NeetCode: **"[Product of Array Except Self](https://www.youtube.com/watch?v=bNvIQI2wAjk)"**.
 
 ----
 
 ## [↑](#home) <a id="longest"></a> Longest Consecutive Sequence
-Рассмотрим задачу [Longest Consecutive Sequence](https://leetcode.com/problems/longest-consecutive-sequence/).
+Рассмотрим задачу **"[Longest Consecutive Sequence](https://leetcode.com/problems/longest-consecutive-sequence/)"**:
+> Дан несортированный массив чисел. Нужно получить длину самой длинной последовательности чисел в нём. Например, для [100,4,200,1,3,2] последовательностью будет [1, 2, 3, 4] и ответ будет 4.
 
-За разбор, как обычно, спасибо NeetCode: [Longest Consecutive Sequence](https://www.youtube.com/watch?v=P6RZZMu_maU)
+Данная задача имеет интересное решение. Идея заключается в том, что последовательность, это когда у числа есть число+1, число+2 и так далее. А что если сохранить все доступные числа в структуре, откуда можно забирать данные за константу и просто использовать как своего рода "кэш".
 
-Для начала нам нужно подготовить Set с элементами:
+![](../img/arrays/Sequence.png)
+
+Для начала нам нужно подготовить HashSet с элементами:
 ```java
 Set<Integer> set = new HashSet<>();
 for (int num : nums) {
@@ -283,7 +316,7 @@ for (int num : nums) {
 }
 ```
 
-Далее при помощи Set будем искать самую длинную последовательность:
+Далее при помощи Set будем искать самую длинную последовательность. Ещё одна хитрость - нас интересует поиск только от тех элементов, которые являются началом последовательности, т.к. именно они дадут максимальный результат:
 ```java
 int longest = 0;
 for (int num : nums) {
@@ -298,19 +331,19 @@ for (int num : nums) {
 }
 return longest;
 ```
+За разбор, как обычно, спасибо NeetCode: **"[Longest Consecutive Sequence](https://www.youtube.com/watch?v=P6RZZMu_maU)"**.
 
 ----
 
 ## [↑](#home) <a id="allDuplicates"></a> Find all duplicates in Array
-Рассмотрим задачу [Find all duplicates in Array](https://leetcode.com/problems/find-all-duplicates-in-an-array/).\
-Разбор можно посмотреть у Nikhil Lohia: [Find all Duplicates in an Array](https://www.youtube.com/watch?v=lFhiz9ntwqk).
+Рассмотрим задачу **"[Find all duplicates in Array](https://leetcode.com/problems/find-all-duplicates-in-an-array/)"**:
+> Дан массив длинной в N, где числа в диапазоне [1, N] и каждое число появляется один или два раза. Вернуть все дубли.
 
-Самое главное для решения - увидеть как соотносятся индексы элементов и значения.\
-По условию задачи в массиве из N элементов числа будут в диапазоне [1, n]. Тогда можно визуализировать пример из задачи:
+Данная задача интересна подходом к её решению. По условию задачи мы видим, что у нас нет чисел ноль. Получается, что если из числа вычесть единицу, то мы можем соотнести число с индексом:
 
 ![](../img/arrays/ArrayDuplicates.png)
 
-Можно увидеть, что если бы у нас был отдельный массив для учёта цифр той же размерности, что и наш массив, то мы могли бы просто из числа вычитать единицу чтобы получить индекс ячейки, где бы мы хранили информацию о посещении. Например, для числа 1 это была бы ячейка с нулевым индексом.
+Получается, что каждый раз мы берём число, вычитаем из него единицу и получаем индекс. Если по этому индексу положительное число - мы ещё не посещали его. Если же посещали - то мы нашли дубль. Дублем будет число, равное индексу + 1.
 
 В таком случае решить данную задачу можно и без дополнительного массива:
 ```java
@@ -327,54 +360,60 @@ for (int i = 0; i < nums.length; i++) {
 }
 return result;
 ```
+Разбор можно посмотреть у Nikhil Lohia: **"[Find all Duplicates in an Array](https://www.youtube.com/watch?v=lFhiz9ntwqk)"**.
 
 ----
 
 ## [↑](#home) <a id="missingPositive"></a> First Missing Positive
-Рассмотрим задачу [First Missing Positive](https://leetcode.com/problems/first-missing-positive/).
+Рассмотрим задачу **"[First Missing Positive](https://leetcode.com/problems/first-missing-positive/)"**:
+> Дан неотсортированный массив чисел (положительных и отрицательных). Вернуть пропущенное наименьшее положительное число. Сделать это нужно за время O(n) и за 0(1) по памяти.
 
-Как обычно, разбор от NeetCode: [First Missing Positive](https://www.youtube.com/watch?v=8g78yfzMlao)
+Данная задача использует тот же подход, что и задача **[Find all duplicates in Array](#allDuplicates)**. Мы будем использовать исходный массив в качестве нашего hashset. При этом нас интересуют только те числа, которые больше нуля:
 
-Код решения:
+![](../img/arrays/MissingPositive.png)
+
+Следовательно, отрицательные числа можно предварительно занулить, чтобы они не мешали работе алгоритма:
 ```java
-public int firstMissingPositive(int[] nums) {
-    //We are interested ONLY in positive integers. Set other as zero
-    for (int i = 0; i < nums.length; i++) {
-        if (nums[i] < 0) nums[i] = 0;
-    }
-
-    for (int i = 0; i < nums.length; i++) {
-        int val = Math.abs(nums[i]);
-        // [1,2,0] has n=3. The first number that can be missed = 1
-        // It means that values should be in a range [1,n]
-        if (val >= 1 && val <= nums.length) {
-            if (nums[val - 1] > 0) {
-                // Mark corresponding element as negative
-                nums[val - 1] = nums[val - 1]  * -1;
-            } else if (nums[val - 1] == 0) {
-                // If marked element is zero mark it as negative number ouside the range
-                // We will not try to handle it because it's outside the available range
-                nums[val - 1] = (nums.length + 1) * -1;
-            }
-        }
-    }
-    for (int i = 1; i < nums.length + 1; i++) {
-        // Any non-negative values means "sequence was interrupted"
-        if (nums[i - 1] >= 0) return i;
-    }
-    return nums.length + 1;
+//We are interested ONLY in positive integers. Set other as zero
+for (int i = 0; i < nums.length; i++) {
+    if (nums[i] < 0) nums[i] = 0;
 }
 ```
+
+Дальше проходим по исходному массиву, где больше нет отрицательных чисел. Нас интересуют только те элементы, значение которых может быть соотнесено с индексом элемента в массива:
+Код решения:
+```java
+for (int i = 0; i < nums.length; i++) {
+    int val = Math.abs(nums[i]);
+    // [1,2,3] has n=3. The first number that can be missed = 1
+    // It means that values should be in a range [1,n]
+    if (val >= 1 && val <= nums.length) {
+        if (nums[val - 1] > 0) {
+            // Mark corresponding element as negative
+            nums[val - 1] = nums[val - 1]  * -1;
+        } else if (nums[val - 1] == 0) {
+            // If marked element is zero mark it as negative number ouside the range
+            // We will not try to handle it because it's outside the available range
+            nums[val - 1] = (nums.length + 1) * -1;
+        }
+    }
+}
+for (int i = 1; i < nums.length + 1; i++) {
+    // Any non-negative values means "sequence was interrupted"
+    if (nums[i - 1] >= 0) return i;
+}
+return nums.length + 1;
+```
+Как обычно, разбор от NeetCode: **"[First Missing Positive](https://www.youtube.com/watch?v=8g78yfzMlao)"**.
 
 ----
 
 ## [↑](#home) <a id="all"></a> Find All Numbers Disappeared in an Array
-Стоит рассмотреть так же задачу на поиск пропущенных (не обязательно только одного) чисел.\
-Задача на LeetCode: [Find All Numbers Disappeared in an Array](https://leetcode.com/problems/find-all-numbers-disappeared-in-an-array/).
+Рассмотрим задачу **"[Find All Numbers Disappeared in an Array](https://leetcode.com/problems/find-all-numbers-disappeared-in-an-array/)"**:
+> Дан массив из N чисел, каждое из которых в диапазоне [1, n]. Вернуть массив всех чисел из этого диапазона, которые отсутствуют.
 
-Интересно, что решение данной задачи похоже на решение задачи по поиску дубликатов. Разница лишь в том, как получить ответ.
-
-В задаче важно обратить внимание на условие. Дан массив из n чисел, где каждое число в диапазоне [1, n]. Получается, что число 0 не задейстовано. Это позволяет нам числа [1,n] соотнести с индексами [0,n-1]. То есть если из числа вычесть единицу, то мы можем получить индекс. На основе этого мы можем меняя массив маркировать элементы, которые мы посетили:
+Данная задача похожа на задачу **"[Find all duplicates in Array](#allDuplicates)"**.\
+Важной подсказкой для нас является то, что каждое число в диапазоне [1, n]. А значит, что число 0 не задействовано. Получается, мы можем сдвинуть каждое число на 1 и получить индекс элемента, который своим знаком будет показывать посещение числа:
 
 ![](../img/arrays/Missing.png)
 
@@ -397,3 +436,4 @@ public List<Integer> findDisappearedNumbers(int[] nums) {
     return result;
 }
 ```
+Разбор задачи от NeetCode: **"[Find All Numbers Disappeared in an Array](https://www.youtube.com/watch?v=8i-f24YFWC4)"**.

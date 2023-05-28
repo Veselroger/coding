@@ -1,17 +1,17 @@
 # <a id="home"></a> 2D Arrays
 
 Данный раздел посвящён задачам на двумерные массивы из **[Leetcode Patterns](https://seanprashad.com/leetcode-patterns/)**.\
-Кроме того, будем использовать [Roadmap](https://neetcode.io/roadmap) от NeetCode.
+Кроме того, будем использовать **[Roadmap](https://neetcode.io/roadmap)** от NeetCode.
 
 
 **Table of Contents:**
-- [Arrays in Java](#arrays)
-- [Convert 1D Array Into 2D Array](#convert)
-- [Spiral Matrix](#spiral)
-- [Rotate Image](#rotate)
-- [Set Matrix Zeroes](#matrixZeroes)
-- [Search a 2D Matrix](#2dsearch)
-- [Valid Sudoku](#sudoku)
+1. [Arrays in Java](#arrays)
+2. [Convert 1D Array Into 2D Array](#convert)
+3. [Spiral Matrix](#spiral)
+4. [Search a 2D Matrix](#2dsearch)
+5. [Rotate Image](#rotate)
+6. [Set Matrix Zeroes](#matrixZeroes)
+7. [Valid Sudoku](#sudoku)
 
 ----
 
@@ -40,11 +40,15 @@ System.out.println(array[0][1]);
 ----
 
 ## [↑](#home) <a id="convert"></a> Convert 1D Array Into 2D Array
-Рассмотрим задачу [Convert 1D Array Into 2D Array](https://leetcode.com/problems/convert-1d-array-into-2d-array/).
+Рассмотрим задачу **"[Convert 1D Array Into 2D Array](https://leetcode.com/problems/convert-1d-array-into-2d-array/)"**:
+> Дан одномерный массив чисел. Нужно его превратить в двумерный массив из m строк и n столбцов.
 
 На самом деле решение простое. Нам понадобится два счётчика: колонки и столбцы.\
 Когда указатель столбца доходит до лимита, то мы просто его сбрасываем и инкрементируем счётчик строк:
 
+![](../img/arrays/To2DArray.png)
+
+Тогда для решения заведём два указателя: row и column. Когда column будет доходить до n то мы будем переходить на новую строку:
 ```java
 public int[][] construct2DArray(int[] original, int m, int n) {
     int expectedSize = m * n; // m rows x n columns
@@ -72,9 +76,12 @@ public int[][] construct2DArray(int[] original, int m, int n) {
 ----
 
 ## [↑](#home) <a id="spiral"></a> Spiral Matrix
-Рассмотрим задачу [Spiral Matrix](https://leetcode.com/problems/spiral-matrix/).
+Рассмотрим задачу **"[Spiral Matrix](https://leetcode.com/problems/spiral-matrix/)"**:
+> Дан двумерный массив. Нужно его обойти по спирали.
 
-Как обычно, отличный разбор [NeetCode: Spiral Matrix](https://www.youtube.com/watch?v=BJnMZNwUk1M).
+Для решения нам понадобится завести указатели, которые будут ограничивать наш обход с разных сторон:
+
+![](../img/arrays/SpiralMatrix.png)
 
 Код решения:
 ```java
@@ -96,6 +103,7 @@ public List<Integer> spiralOrder(int[][] matrix) {
 
         // Return (if we have elements for that)
         if (left > right || top > bottom) break;
+        
         for (int i = right; i >= left; i--) {
             result.add(matrix[bottom][i]);
         }
@@ -109,13 +117,67 @@ public List<Integer> spiralOrder(int[][] matrix) {
     return result;
 }
 ```
+Отличный разбор решения: **"[NeetCode: Spiral Matrix](https://www.youtube.com/watch?v=BJnMZNwUk1M)"**.
+
+----
+
+## [↑](#home) <a id="2dsearch"></a> Search a 2D Matrix
+Рассмотрим задачу **"[Search a 2D Matrix](https://leetcode.com/problems/search-a-2d-matrix/)"**:
+> Дан двумерный массив. В каждой строке элементы отсортированы по возростоящей. Каждая строка начинается с элемента, который больше чем последний элемент прошлой строки. Ответить на вопрос: есть ли искомый элемент target в двумерном массиве.
+
+Для начала стоит вспомнить как работает бинарный поиск:
+
+![](../img/arrays/BinarySearch.png)
+
+Теперь применим его к нашему двумерному массиву. Но при помощи бинарного поиска мы сначала будем искать строки:
+
+![](../img/arrays/2DMatrixRowSearch.png)
+
+Таким образом, мы сначала находим интересующую нас строку:
+```java
+int top = 0;
+int right = matrix[0].length - 1;
+int bottom = matrix.length - 1;
+// Do a binary search for row
+int index = 0;
+while (top <= bottom) {
+    index = top + (bottom - top)/2;
+    if (target > matrix[index][right]) {
+        top = index + 1;
+    } else if (target < matrix[index][0]) {
+        bottom = index - 1;
+    } else {
+        break;
+    }
+}
+if (top > bottom) return false;
+```
+
+Далее, если нашли строчку, выполняем поиск по ней применяя такой же алгоритм:
+```java
+int left = 0;
+while (left <= right) {
+    int middle = left + (right - left)/2;
+    if (target > matrix[index][middle]) {
+        left = middle + 1;
+    } else if (target < matrix[index][middle]) {
+        right = middle - 1;
+    } else {
+        return true;
+    }
+}
+return false;
+```
+
+Разбор этой задачи, как обычно, можно посмотреть у NeetCode: **"[Search a 2D Matrix](https://www.youtube.com/watch?v=Ber2pi2C0j0)"**.
 
 ----
 
 ## [↑](#home) <a id="rotate"></a> Rotate Image
-Рассмотрим задачу [Rotate Image](https://leetcode.com/problems/rotate-image/).
+Рассмотрим задачу **"[Rotate Image](https://leetcode.com/problems/rotate-image/)"**:
+> Дан двумерный массив. Необходимо его повернуть по часовой стрелке. Таким образом числа, которые шли слева направо в первой строке станут образовывать последнюю колонку сверху вниз.
 
-Как обычно, отличный разбор у NeetCode: [Rotate Image - Matrix ](https://www.youtube.com/watch?v=fMSJSS7eO1w&t=1s).
+Как обычно, отличный разбор у NeetCode: **"[Rotate Image - Matrix ](https://www.youtube.com/watch?v=fMSJSS7eO1w&t=1s)"**.
 
 Код решения:
 ```java
@@ -193,50 +255,6 @@ if (firstRowIsZero) {
         matrix[0][col] = 0;
     }
 }
-```
-
-----
-
-## [↑](#home) <a id="2dsearch"></a> Search a 2D Matrix
-Рассмотрим задачу [Search a 2D Matrix](https://leetcode.com/problems/search-a-2d-matrix/).
-
-Разбор, как обычно, можно посмотреть у NeetCode: [Search a 2D Matrix](https://www.youtube.com/watch?v=Ber2pi2C0j0).
-
-![](../img/Search2D.png)
-
-Таким образом, мы сначала находим интересующую нас колонку:
-```java
-int right = matrix[0].length - 1;
-// Do a binary search for row
-int top = 0, bottom = matrix.length - 1;
-int index = 0;
-while (top <= bottom) {
-    index = top + (bottom - top)/2;
-    if (target > matrix[index][right]) {
-        top = index + 1;
-    } else if (target < matrix[index][0]) {
-        bottom = index - 1;
-    } else {
-        break;
-    }
-}
-if (top > bottom) return false;
-```
-
-Далее, если нашли строчку, выполняем поиск по ней применяя такой же алгоритм:
-```java
-int left = 0;
-while (left <= right) {
-    int middle = left + (right - left)/2;
-    if (target > matrix[index][middle]) {
-        left = middle + 1;
-    } else if (target < matrix[index][middle]) {
-        right = middle - 1;
-    } else {
-        return true;
-    }
-}
-return false;
 ```
 
 ----
