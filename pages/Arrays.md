@@ -17,6 +17,8 @@
 11. [Find all duplicates in Array](#allDuplicates)
 12. [First Missing Positive](#missingPositive)
 13. [Find All Numbers Disappeared in an Array](#all)
+14. [Maximum Difference Between Increasing Elements](#maximum)
+15. [Maximum Subarray](#subarray)
 
 ----
 
@@ -45,7 +47,7 @@ public boolean containsDuplicate(int[] nums) {
 Рассмотрим задачу **"[Find pivot index](https://leetcode.com/problems/find-pivot-index/)"**:
 > Дан array of integers. Найти pivot - элемент, суммы элементов слева и справа от которого одинаковы.
 
-Мы можем посчитать сумму всех элементов. Тогда на основе этой суммы мы сможем высчитать половины слева и справа:
+Мы можем посчитать сумму всех элементов (**total**). Тогда на основе этой суммы мы сможем высчитать половины слева и справа:
 ```java
 int total = 0;
 for (int num : nums) {
@@ -127,6 +129,8 @@ public int[] twoSum(int[] nums, int target) {
 
 ![](../img/arrays/Triplets.png)
 
+Получается, т.к. нам известен diff, т.е. шаг с которым у нас должны быть числа, нам достаточно знать одно число и от него этот шаг отмерять. Получается, нам нужно анализировать самое последнее число из триплета, т.к. предыдущие мы должны были видеть уже.
+
 Таким образом решение данной задачи очень похоже на решение задачи **[Two sum](#twosum)**:
 ```java
 public int arithmeticTriplets(int[] nums, int diff) {
@@ -148,7 +152,10 @@ public int arithmeticTriplets(int[] nums, int diff) {
 Разберём задачу **"[Valid Anagram](https://leetcode.com/problems/valid-anagram/)"**:
 > Дано две строки s и t. Вернуть true если t анаграмма строки s, т.е. состоит из тех же символов в том же количестве.
 
-Каждый character в строке может быть приведён к соответствующем коду из [ASCII Table](https://www.cs.cmu.edu/~pattis/15-1XX/common/handouts/ascii.html). Например, ``(int)'a'`` будет равен 97. Кроме того, мы знаем, что всего в английском алфавите 26 букв.
+Каждый character в строке может быть приведён к соответствующем коду из [ASCII Table](https://www.cs.cmu.edu/~pattis/15-1XX/common/handouts/ascii.html). Например, ``(int)'a'`` будет равен 97. Кроме того, мы знаем, что всего в английском алфавите 26 букв. Данное значение даже можно не учить, а просто посчитать сколько букв МЕЖДУ a и z и добавить единицу (т.к. дистанция считается не от начала, а от первого элемента), например:
+```java
+(int)'z' - (int)'a' + 1
+```
 
 Получается, мы можем завести массив из 26 элементов. Исходная строка будет инкрементировать значения в ячейках по нужному индексу, а строка анограмма - декрементировать:
 
@@ -237,7 +244,7 @@ for (int num : nums) {
 
 Далее мы используем **bucket sort**, где каждый бакет соответствует частоте символа. Минимальное значение = 1, то есть нулевой индекс мы пропускаем. А следовательно, нам нужно подготовить массив длинной N + 1 (т.к. нам нужен ещё один слот взамен нулевого):
 ```java
-List<Integer>[] bucket = new List[nums.length + 1];
+List<Integer>[] bucket = new ArrayList[nums.length + 1];
 for (Integer key : frequencyMap.keySet()) {
     Integer frequency = frequencyMap.get(key);
     if (bucket[frequency] == null) {
@@ -248,12 +255,13 @@ for (Integer key : frequencyMap.keySet()) {
 ```
 
 Чем более часто встречается элемент, тем он ближе к концу нашего массива bucket'ов. Посчитаем результат.\
-Важно не уйти за пределы массива и важно вернуть именно k элементов:
+Важно не уйти за пределы массива (позиция на индексе 0 или выше) и важно вернуть именно k элементов:
 ```java
 int[] result = new int[k];
 int counter = 0;
 for (int pos = bucket.length - 1; pos >= 0 && counter < k; pos--) {
     if (bucket[pos] != null) {
+        // Found bucket. Pick elements while we can
         for (Integer integer : bucket[pos]) {
             result[counter++] = integer;
             if (counter >= k) break;
@@ -304,7 +312,8 @@ public int[] productExceptSelf(int[] nums) {
 Рассмотрим задачу **"[Longest Consecutive Sequence](https://leetcode.com/problems/longest-consecutive-sequence/)"**:
 > Дан несортированный массив чисел. Нужно получить длину самой длинной последовательности чисел в нём. Например, для [100,4,200,1,3,2] последовательностью будет [1, 2, 3, 4] и ответ будет 4.
 
-Данная задача имеет интересное решение. Идея заключается в том, что последовательность, это когда у числа есть число+1, число+2 и так далее. А что если сохранить все доступные числа в структуре, откуда можно забирать данные за константу и просто использовать как своего рода "кэш".
+Данная задача имеет интересное решение. Чтобы её решить нужно ответить на вопрос: Что такое последовательность?\
+Последовательность, это когда у числа есть число+1, число+2 и так далее. А что если сохранить все доступные числа в структуре, откуда можно забирать данные за константу и просто использовать как своего рода "кэш".
 
 ![](../img/arrays/Sequence.png)
 
@@ -331,6 +340,8 @@ for (int num : nums) {
 }
 return longest;
 ```
+Можно заметить, что подход к решению данной задачи напоминает немного подход из задачи [Number of Arithmetic Triplets](#triplets).
+
 За разбор, как обычно, спасибо NeetCode: **"[Longest Consecutive Sequence](https://www.youtube.com/watch?v=P6RZZMu_maU)"**.
 
 ----
@@ -437,3 +448,63 @@ public List<Integer> findDisappearedNumbers(int[] nums) {
 }
 ```
 Разбор задачи от NeetCode: **"[Find All Numbers Disappeared in an Array](https://www.youtube.com/watch?v=8i-f24YFWC4)"**.
+
+----
+
+## [↑](#home) <a id="maximum"></a> Maximum Difference Between Increasing Elements
+Рассмотрим другую задачу: [Maximum Difference Between Increasing Elements](https://leetcode.com/problems/maximum-difference-between-increasing-elements/).
+
+![](../img/arrays/MaxDiff.png)
+
+Получается, смотря на каждое число мы должны думать, а не является ли оно минимальным. Если минимальное - то мы смотрим только справа от него, т.к. i должен быть меньше j по условию задачи.
+
+Если же рассматриваемое число больше известного минимума, то между ними уже есть какая-то разница. Нужно лишь проверить, не является ли она самой большой разницей из всех, которых мы посчитали. Таким образом решение может выглядеть так:
+
+```java
+public int maximumDifference(int[] nums) {
+    int diff = -1;
+    int min = Integer.MAX_VALUE; // Any value less
+    for (int num : nums) {
+        if (num < min) {
+            // We found new minimum
+            min = num;   
+        } else if (num > min) {
+            // Probably, we found new max diff?
+            int curDiff = num - min;
+            if (diff < curDiff) {
+                diff = curDiff;
+            }
+        }
+    }
+    return diff;
+}
+```
+
+----
+
+## [↑](#home) <a id="subarray"></a> Maximum Subarray
+Рассмотрим ещё одну задачу: [Maximum Subarray](https://leetcode.com/problems/maximum-subarray/).
+
+Поможет её решить опять визуализация задачи.
+
+![](../img/arrays/MaxSubarray-1.png)
+
+Нам нужно помнить и различать текущую сумму и максимально посчитанную сумму чтобы вовремя остановиться.
+```java
+public int maxSubArray(int[] nums) {
+    // nums is always not empty
+    int max = nums[0], cur = 0;
+    for (int num : nums) {
+        cur = cur + num;
+        if (num >= cur) {
+            // New num more profitable. Can skip previous elements
+            cur = num;
+        }
+        // We have new current summ. Should we treat it as new max?
+        max = Math.max(max, cur);
+    }
+    return max;
+}
+```
+
+----

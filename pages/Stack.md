@@ -18,9 +18,12 @@
 ----
 
 ## [↑](#home) <a id="parentheses"></a> Valid Parentheses
-Рассмотрим задачу "[Valid Parentheses](https://leetcode.com/problems/valid-parentheses/)".\
+Рассмотрим задачу "[Valid Parentheses](https://leetcode.com/problems/valid-parentheses/)":
+> Дана строка содержащая различные виды скобок. Проверить, корректна ли строка.
+
 Разбор задачи от NeetCode: [Valid Parentheses](https://www.youtube.com/watch?v=WTzjTskDFMg).\
-Разбор задачи от Nick White: [Valid Parentheses Solution Explained](https://www.youtube.com/watch?v=WTzjTskDFMg).
+Разбор задачи от Nick White: [Valid Parentheses Solution Explained](https://www.youtube.com/watch?v=WTzjTskDFMg).\
+Разбор задачи от Сергея Пузанкова: [Правильная последовательность скобок](https://www.youtube.com/watch?v=C6CbIReHsNk).
 
 Данная задача про использование [Stack](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Stack.html). Стэк - это так называемая **LIFO (last-in-first-out)** структура данных. Согласно Java API, рекомендуется использовать [двустороннюю очередь](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Deque.html), которая может выступать в роли LIFO:
 >Deque<Integer> stack = new ArrayDeque<Integer>();
@@ -56,7 +59,9 @@ public boolean isValid(String s) {
 ----
 
 ## [↑](#home) <a id="minstack"></a> Min Stack
-Рассмотрим задачу "[Min Stack](https://leetcode.com/problems/min-stack/)".\
+Рассмотрим задачу "[Min Stack](https://leetcode.com/problems/min-stack/)":
+> Нужно написать такой стэк, который помнит самый минимальный добавленный элемент.
+
 Разбор задачи от NeetCode: [Design Min Stack](https://www.youtube.com/watch?v=qkLl7nAwDPo).\
 Разбор задачи от Nick White: [Min Stack (Algorithm Explained)](https://www.youtube.com/watch?v=WxCuL3jleUA).
 
@@ -66,7 +71,7 @@ private int[] stack = new int[10];
 private int[] min = new int[stack.length];
 private int pos = -1;
 ```
-Т.е. структура для минимумов содержит столько же позиций, сколько и сам стэк.
+Т.е. структура для минимумов содержит столько же позиций, сколько и сам стэк. В ней мы будем запоминать минимум на момент каждого положения в стэке.
 
 Дальше реализуем методы добавления/удаления элемента:
 ```java
@@ -99,7 +104,10 @@ public int getMin() {
 ----
 
 ## [↑](#home) <a id="polish"></a> Reverse Polish Notation
-Рассмотрим задачу "[Evaluate Reverse Polish Notation](https://leetcode.com/problems/evaluate-reverse-polish-notation/)".\
+Рассмотрим задачу "[Evaluate Reverse Polish Notation](https://leetcode.com/problems/evaluate-reverse-polish-notation/)":
+> Дана строка, представляющая арифметическое выражение в "Reverse Polish Notation". Нужно его вычислить. Например: ["2","1","+","3","*"]
+вычисляется как ((2 + 1) * 3) = 9
+
 Разбор задачи от NeetCode: [Reverse Polish Notation](https://www.youtube.com/watch?v=iu0082c4HDE).\
 Разбор задачи от Back to Back SWE: [Reverse Polish Notation](https://www.youtube.com/watch?v=qN8LPIcY6K4).
 
@@ -134,7 +142,9 @@ public int evalRPN(String[] tokens) {
 ----
 
 ## [↑](#home) <a id="genparentheses"></a> Generate Parentheses
-Рассмотрим задачу "[Generate Parentheses](https://leetcode.com/problems/generate-parentheses/)".\
+Рассмотрим задачу "[Generate Parentheses](https://leetcode.com/problems/generate-parentheses/)":
+> Дано количество пар скобок. Нужно написать функцию, которая генерирует список всех корректных вариантов.
+
 Разбор задачи от NeetCode: [Generate Parentheses](https://www.youtube.com/watch?v=s9fokUqJ76A).\
 Разбор задачи от Nick White: [Generate Parentheses](https://www.youtube.com/watch?v=qBbZ3tS0McI).
 
@@ -143,7 +153,7 @@ public int evalRPN(String[] tokens) {
 StringBuilder stack = new StringBuilder("");
 sb.append("(");                 // push [ ( ]
 sb.append(")");                 // push [ () ]
-sb.deleteCharAt(sb.length()-1); //pop [ ( ]
+sb.deleteCharAt(sb.length()-1); //  pop [ ( ]
 ```
 
 Тогда, можно использовать такой подход и для решения данной задачи, объединив использование стэка и подход backtracking:
@@ -177,31 +187,76 @@ public void backTracking(List<String> result, StringBuilder stack, int open, int
 ----
 
 ## [↑](#home) <a id="nextGreater"></a> Next Greater Element I
-Рассмотрим задачу "[Next Greater Element I](https://leetcode.com/problems/next-greater-element-i/)".\
+Рассмотрим задачу "[Next Greater Element I](https://leetcode.com/problems/next-greater-element-i/)":
+> Дано 2 массива. Нужно для каждого числа из первого массива найти следующий за ним элемент во втором массиве, при этом этот элемент должен быть больше. Например, массивы [4,1,2] и [2,1,3,4]
+
 Разбор задачи от:
 - [Nikhil Lohia](https://www.youtube.com/watch?v=mJWQjJpEMa4)
 - [NeetCode](https://www.youtube.com/watch?v=68a1Dc_qVq4)
 - [NickWhite](https://www.youtube.com/watch?v=8BDKB2yuGyg)
 
+Решение основано на технике **"[Monotonic Stack](https://www.youtube.com/watch?v=Dq_ObZwTY_Q)"**. Пример решения задач можно увидеть в статье **"[Solving Monotonic Queue/Stack Problems](https://dev.to/vladisov/solving-monotonic-queuestack-problems-k28)"**.
+
+Что значит, что у элемента есть "next greater element"? Это значит, что справа мы видели больший элемент. Нас интересует именно next, то есть следующий, а не максимальный. Кроме того, из этого следует, что у самого крайнего справа элемента не может быть такого элемента, то есть для него ответ всегда -1.
+
+Если мы идём справа налево, то у нас есть возможность не ходить несколько раз туда-обратно. Это может быть полезно, если нам важны индексы (например, заполнить массив). Если мы не нашли элементы - получаем -1. Если мы видим больший элемент, чем любой из увиденных - -1. Если же меньше, то значит мы в прошлый раз видели его next. Получается такое решение:
+```java
+public static int[] printNextGreaterElements(int[] arr) {
+    int[] res = new int[arr.length];
+    Deque<Integer> st = new ArrayDeque<>();
+    for (int i = arr.length -1; i >= 0; i--) {
+        // If we are the "bigger" then remove elements from right. They will not be needed anymore
+        while (!st.isEmpty() && st.getLast() <= arr[i]) {
+            st.removeLast();
+        }
+        if (st.isEmpty()) {
+            res[i] = -1;
+        } else {
+            // Stack is not empty. We are not the "bigger"
+            // It means that stack top our "next"
+            res[i] = st.getLast();
+        }
+        st.addLast(arr[i]);
+    }
+    return res;
+}
+```
+
+Но в задаче с LeetCode такой подход не применим, т.к. нам требуется не только сформировать пониманием, для кого какой элемент будет следующим, но и потом по изначальному массиву выполнить быстрый поиск по результату. В этом случае мы можем пойти и слева направо:
+
 ![](../img/stack/NextGreaterElement.png)
 
-Решение:
 ```java
-public int[] nextGreaterElement(int[] nums1, int[] nums2) {
+public Map<Integer,Integer> mapNumberAndNextGreater(int[] nums) {
     Deque<Integer> stack = new ArrayDeque<>();
     Map<Integer,Integer> map = new HashMap<>();
-    for(int num : nums2){
+    for(int num : nums){
+        // Current element is bigger than previous == next greater for previous
         while(!stack.isEmpty() && stack.getFirst() < num) {
-            map.put(stack.removeFirst(), num);
+            // Remove elements from handling list (our stack). We found an answer for this element
+            int element = stack.removeFirst(); 
+            map.put(element, num);
         }
+        // Stack is empty OR we haven't seen an answer yer for these elements
         stack.addFirst(num);
     }
+    return map;
+}
+```
 
+Остаётся только сформировать ответ:
+```java
+public int[] nextGreaterElement(int[] nums1, int[] nums2) {
+    Map<Integer,Integer> map = mapNumberAndNextGreater(nums2);
+        
     int[] ans = new int[nums1.length];
     for(int i = 0; i < nums1.length; i++){
+        // We use numbers as a key in the map
         if(map.containsKey(nums1[i])) {
+            // Value is a next great element
             ans[i] = map.get(nums1[i]);
         } else {
+            // Haven't seen it == -1
             ans[i] = -1;
         }
     }
@@ -212,10 +267,18 @@ public int[] nextGreaterElement(int[] nums1, int[] nums2) {
 ----
 
 ## [↑](#home) <a id="temp"></a> Daily Temperatures
-Рассмотрим задачу "[Daily Temperatures](https://leetcode.com/problems/daily-temperatures/)".\
+Рассмотрим задачу "[Daily Temperatures](https://leetcode.com/problems/daily-temperatures/)":
+> Дан массив целых чисел, представляющих температуру в некоторый день. Вернуть массив ответов, сколько нужно ждать в каждый день более высокой температуру.
+
 Разбор задачи от NeetCode: [Daily Temperatures](https://www.youtube.com/watch?v=cTBiBSnjO3c).\
 Разбор задачи от Nikhil Lohia: [Daily Temperatures: Full solution with animations](https://www.youtube.com/watch?v=ekFs9Nb2RNQ).\
 Визуализация решения от Alexander Le: [Leetcode Visualized: Daily Temperatures](https://youtu.be/WGm4Kj3lhRI?t=212).
+
+Данная задача очень похожа на **"[Next Greater Element I](#nextGreater)"**. Что мы складываем в стэк? Элементы (а точнее индексы, по которым их можно найти), для которых ещё неизвестен результат, т.к. мы его узнаем на какой-то следующей итерации.
+
+Мы идём слева направо. Если стэк пуст, то мы просто кладём туда указатель на текущий элемент. Если же в стэке элемент больше, чем текущий - мы не можем пока что для него получить результат, а значит мы просто добавляем в стэк ещё один элемент для рассчёта. Если же в стэке элемент, который меньше текущего - мы нашли элемент в стэке, для которого мы только что узнали день более тёплой температуры. Нам достаточно посчитать дистанцию: взять текущий день (то есть индекс итерации) и вычесть из неё индекс элемента, для которого найден ответ. Естественно, элемент из стэка удаляется, т.к. он уже обработан.
+
+![](../img/stack/DailyTemperatures.png)
 
 ```java
 public int[] dailyTemperatures(int[] temperatures) {
@@ -237,13 +300,12 @@ public int[] dailyTemperatures(int[] temperatures) {
 ----
 
 ## [↑](#home) <a id="fleet"></a> Car Fleet
-Рассмотрим задачу "[Car Fleet](https://leetcode.com/problems/car-fleet/)".\
+Рассмотрим задачу "[Car Fleet](https://leetcode.com/problems/car-fleet/)":
+> Дано два массива: скорости для машин и их изначальное положение. А так же цель, сколько должны проехать машины. Вернуть количество "car fleet" - группы машин. Группой считаются машины, которые следуют вместе. Если же автомобиль с большей скоростью "утыкается" в более медленные, то они следуют со скоростью более медленного.
+
 Разбор задачи от NeetCode: [Car Fleet](https://www.youtube.com/watch?v=Pr6T-3yB9RM).
 
-Для решения данной задачи нам понадобится дополнительный класс для автомобилей. Нам важно обрабатывать автомобили с учётом их позиции. А так же нам важно знать, сколько каждой машине нужно, чтобы доехать до target:
-
-![](../img/stack/carfleet.png)
-
+Для упрощения жизни добавим класс, который будет описывать машину: её положение и сколько ей осталось до финиша.
 ```java
 class Car {
     public int pos;
@@ -256,7 +318,11 @@ class Car {
 }
 ```
 
-Теперь мы можем подготовить коллекцию машин для работы:
+Решение выглядит следующим образом:
+
+![](../img/stack/carfleet.png)
+
+Будем смотреть на машины с финиша, т.к. так как в этом случае нам не придётся ходить вперёд назад по массиву машин. Тогда подготовим массив машин в отсортированном порядку (самая близкая машина к финишу будет первой в массиве):
 ```java
 // Prepare cars array in a reverse order
 Car[] cars = new Car[position.length];
@@ -265,8 +331,9 @@ for (int i = 0; i < position.length; ++i) {
 }
 Arrays.sort(cars, (a, b) -> b.pos - a.pos);
 ```
+При создании машин мы высчитываем time: остаток расстояния до финиша (например, 3 хода) поделённое на скорость.
 
-И соответственой можем воспользоваться стэком:
+Складываем в стэк машины. Самый последний автомобиль в стэке будет всегда, т.к. он по факту образует car fleet. Дальше у нас два случая: предыдущий автомобиль быстрее/такой же, и тогда они образуют один и тот же fleet. Тогда мы просто не добавляем никого в стэк. Либо же мы находим следующий car fleet, т.к. он едет медленнее, а значит другие "упруться" в него и образуют другой car fleet. Нам останется потом посчитать лишь количество элементов в стэке:
 ```java
 Deque<Car> stack = new ArrayDeque<>();
 for (Car car : cars) {
@@ -282,7 +349,9 @@ return stack.size();
 ----
 
 ## [↑](#home) <a id="decode"></a> Decode String
-Рассмотрим задачу "[Decode String](https://leetcode.com/problems/decode-string/)".\
+Рассмотрим задачу "[Decode String](https://leetcode.com/problems/decode-string/)":
+> Дана закодированная строка вида "3[a]2[bc]". Нужно её раскодировать в результат вида "aaabcbc"
+
 Разбор задачи от NeetCode: [Decode String](https://www.youtube.com/watch?v=qB0zZpBJlh8).\
 Разбор задачи от Nick White: [LeetCode Decode String](https://www.youtube.com/watch?v=0iQqj5egK9k).
 
@@ -305,6 +374,9 @@ for (int i = 0; i < test.length(); i++) {
 ```
 
 Тогда решение может выглядеть следующим образом:
+
+![](../img/stack/DecodeStringTwoStacks.png)
+
 ```java
 public String decodeString(String s) {
     Deque<Integer> repeats = new ArrayDeque<>();
@@ -369,7 +441,8 @@ public String decodeString(String s) {
 ----
 
 ## [↑](#home) <a id="largest"></a> Largest Area In Histogram
-Рассмотрим задачу "[Largest Area In Histogram](https://leetcode.com/problems/largest-rectangle-in-histogram/)".
+Рассмотрим задачу "[Largest Area In Histogram](https://leetcode.com/problems/largest-rectangle-in-histogram/)":
+> Дан массив с высотами гистограмм. Найти область наибольшего прямоугольника гистрограмм.
 
 Для решенния данной задачи нам нужно запоминать какие-то прошлые вычисления, к которым мы можем возвращаться. Например, когда следующий блок меньше прошлого, нам нужно посчитать прошлый блок, а возможно и прошлый за ним. Похоже, нам в данной ситуации поможет стэк.\
 А точнее нам понадобится 2 стэка: стэк позиций и стэк вершин:

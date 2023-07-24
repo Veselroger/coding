@@ -1,6 +1,7 @@
 # Coding tasks workbook
 
-Однажды [Влад Тен](https://www.linkedin.com/in/vladten/) делал разбор [LeetCode Patterns](https://seanprashad.com/leetcode-patterns/). Разберём те же задачи.\
+Однажды [Влад Тен](https://www.linkedin.com/in/vladten/) делал разбор [LeetCode Patterns](https://seanprashad.com/leetcode-patterns/).\
+Разберём те же задачи, ориентируясь кроме того на **[Road Map](https://neetcode.io/roadmap)** от NeetCode.\
 Идея в том, что задачи на алгоритмы важны не сами по себе. Они тренируют "чутьё" на шаблоны.
 
 К сожалению, канал Влада был удалён, однако идея жива. 
@@ -17,16 +18,14 @@
 - [Stack](pages/Stack.md)
 - [Two Pointers](pages/TwoPointers.md)
 - [Binary Search](pages/BinarySearch.md)
+- [Sliding Window](pages/SlidingWindow.md)
 - [Linked List](pages/LinkedLists.md)
 
 **EASY**:
 - [Duplicates](pages/Duplicates.md)
-- [Missing Number](pages/MissingNumber.md)
 - [Climbing Stairs](pages/ClimbingStairs.md)
-- [Best Time to Buy and Sell Stock](pages/BestTimetoBuyAndSell.md)
-- [Range Sum Query](pages/RangeSumQuery.md)
+- [Other](pages/Other.md)
 - [Counting Bits](pages/CountingBits.md)
 - [Meeting Rooms](pages/MeetingRooms.md)
-- [Two Sum](pages/TwoSum.md)
 - [Index Pairs of a String](pages/PairsIndex.md)
 - [Majority Element](pages/Majority.md)
