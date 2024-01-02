@@ -20,9 +20,9 @@
 - [Binary Search](pages/BinarySearch.md)
 - [Sliding Window](pages/SlidingWindow.md)
 - [Linked List](pages/LinkedLists.md)
+- [Trees](pages/Trees.md)
 
 **EASY**:
-- [Duplicates](pages/Duplicates.md)
 - [Climbing Stairs](pages/ClimbingStairs.md)
 - [Other](pages/Other.md)
 - [Counting Bits](pages/CountingBits.md)

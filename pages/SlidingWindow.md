@@ -19,6 +19,7 @@
 - [Permutation in string](#permutation)
 - [Minimum Window Substring](#minWindow)
 - [Sliding Window Maximum](#windowMax)
+- [Nearby Duplicate](#nearby)
 
 ----
 
@@ -543,3 +544,33 @@ public int[] maxSlidingWindow(int[] nums, int k) {
     return result;
 }
 ```
+
+----
+
+## [↑](#home) <a id="nearby"></a> Nearby Duplicate
+Есть усложнённая версия поиска дубликатов: **"[219. Contains Duplicate II](https://leetcode.com/problems/contains-duplicate-ii/)"**.
+Необходимо найти не просто дубликат, а ближайший дубликат в определённом диапазоне длинной k.
+
+Нужно смотреть на дубликаты только в определённом диапазоне, т.е. нужно рассматривать только некоторую ограниченную область.\
+Такую область называют "окном", а название подхода - **"[Window Sliding](https://www.geeksforgeeks.org/window-sliding-technique/)"**.
+
+![](../img/window/NearbyDuplicate.png)
+
+Как видно, мы анализируем на 1 элемент больше, чем размер окна. При этом перед следующим заходом мы должны компенсировать это различие:
+```java
+public boolean containsNearbyDuplicate(int[] nums, int k) {
+    Set<Integer> seen = new HashSet<>();
+    // It's important for us to know about current index (i.e. current position)
+    for (int i = 0; i < nums.length; i++) {
+        if (!seen.add(nums[i])) {
+            return true;
+        }
+        // Maintain window size. Remove element by value of element that is
+        // For [1,2,3,4,5] and k=3 after addition of 4 we should remove inxed 3-3=0
+        if (seen.size() > k) seen.remove(nums[i-k]);
+    }
+    return false;
+}
+```
+
+----
