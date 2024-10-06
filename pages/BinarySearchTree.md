@@ -1,4 +1,4 @@
-# <a id="home"></a> Binary Search
+# <a id="home"></a> Binary Search Tree
 
 Данный раздел посвящён задачам на двоичный поиск из **[Leetcode Patterns](https://seanprashad.com/leetcode-patterns/)**.\
 Плэйлист разборов от NeetCode: **"[Trees](https://www.youtube.com/watch?v=QfJsau0ItOY&list=PLot-Xpze53ldg4pN6PfzoJY7KsKcxF1jg)"**.\

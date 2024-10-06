@@ -20,6 +20,7 @@
 - [Minimum Window Substring](#minWindow)
 - [Sliding Window Maximum](#windowMax)
 - [Nearby Duplicate](#nearby)
+- [Nearby Almost Duplicate](#almostduplicate)
 
 ----
 
@@ -574,3 +575,51 @@ public boolean containsNearbyDuplicate(int[] nums, int k) {
 ```
 
 ----
+
+### [↑](#home) <a id="almostduplicate"></a> 220. Nearby Almost Duplicate
+У поиск ближайших дубликатов есть интересное продолжение - **"[220. Contains Duplicate III](https://leetcode.com/problems/contains-duplicate-iii/)"**.
+
+Для начала нужно понять саму задачу. У нас как обычно есть массив чисел. И наша задача: найти такую пару элементов, что их индексы находятся на расстоянии не большем чем indexDiff (может быть меньше или равно), при этом разница значений этих элементов будет не больше, чем valueDiff (меньше или равно).
+
+Из всех решений мне понравилось с точки зрения подхода решение на основе **[Navigable Set](https://docs.oracle.com/javase/8/docs/api/java/util/NavigableSet.html)**. В этом случае решение задачи сводится к пониманию работы с Navigable Set и к **[Floor and Ceiling Functions](https://www.mathsisfun.com/sets/function-floor-ceiling.html)**. Наиболее удобной реализацией является структура данных TreeSet, где операции выполняются за логарифмическое время. 
+
+Предположим, мы получили элемент num=5. Мы знаем, что разница значений должна быть не более t=2.\
+В этом случае нам надо рассмотреть две ситуации:
+- Мы знаем про другой элемент X, который расположен на прямой так: ``---[num]---[X]---[num+t]--->``
+Т.к. поиск по диапазону влево от X, то выполняем floor(num+t) и накладываем ограничение, что X >= num
+- Мы знаем про другой элемент Y, который расположен на прямой так: ``---[num-t]---[Y]---[num]--->``
+Т.к. поиск по диапазон вправо от Y, то выполняем ceiling(num-t) и накладываем ограничение, что Y <= num
+
+![](../img/arrays/NearBy.png)
+
+```java
+class Solution {
+    public static boolean containsNearbyAlmostDuplicate(int[] nums, int k, int t) {
+        /**
+         * ---[floor]----[num]----[ceiling]--->
+         */
+        NavigableSet<Long> treeSet = new TreeSet<>();
+        for (int i = 0; i < nums.length; i++) {
+            // Use long for num to avoid overflow
+            long num = (long) nums[i];
+            // --[num]---[floor]---[num+t]--->
+            Long floor = treeSet.floor(num + t);
+            if (floor != null && floor >= num) return true;
+            // --[num-t]---[ceil]---[num]--->
+            Long ceil = treeSet.ceiling(num - t);
+            if (ceil != null && ceil <= num) return true;
+
+            treeSet.add(num);
+            // We store k elements and have one element to analyze (num variable).
+            // If we store more then k elements we should remove element at k distance from the current position
+            // Adjust for [1,2,3,4] for k=2: if we add 3, then it's already 3 elements inside but should be 2.
+            // In this case we should remove 1 from the "window": removeIndex = index - k
+            if (i >= k) treeSet.remove((long) nums[i - k]);
+        }
+        return false;
+    }
+}
+```
+Это решение наиболее интересное и интуитивно понятное. Существует решение на основе bucket'ов, но оно сложнее и больше шанс допустить ошибки. Подробнее см. stackoverflow: **"[Contains Duplicate III](https://stackoverflow.com/questions/31119971/leetcode-contains-duplicate-iii/48317895)"**.
+
+Видео разбор от Fisher Coder: [LeetCode 220: Contains Duplicate III ](https://www.youtube.com/watch?v=Cu7g9ovYHNI&t=286s).

@@ -1,4 +1,4 @@
-# <a id="home"></a> 2D Arrays
+# [←](../../README.md) <a id="home"></a> 2D Arrays
 
 Данный раздел посвящён задачам на двумерные массивы из **[Leetcode Patterns](https://seanprashad.com/leetcode-patterns/)**.\
 Кроме того, будем использовать **[Roadmap](https://neetcode.io/roadmap)** от NeetCode.
@@ -6,12 +6,12 @@
 
 **Table of Contents:**
 1. [Arrays in Java](#arrays)
-2. [Convert 1D Array Into 2D Array](#convert)
-3. [Spiral Matrix](#spiral)
-4. [Search a 2D Matrix](#2dsearch)
-5. [Rotate Image](#rotate)
-6. [Set Matrix Zeroes](#matrixZeroes)
-7. [Valid Sudoku](#sudoku)
+2. [[2022] Convert 1D Array Into 2D Array](#convert)
+3. [[54] Spiral Matrix](#spiral)
+4. [[74] Search a 2D Matrix](#2dsearch)
+5. [[48] Rotate Image](#rotate)
+6. [[73] Set Matrix Zeroes](#matrixZeroes)
+7. [[36] Valid Sudoku](#sudoku)
 
 ----
 
@@ -36,20 +36,20 @@ array[0] = new int[5];
 System.out.println(array[0][1]);
 ```
 
-![](../img/arrays/ArraysDimensions.png)
+![](../../img/arrays/2D/ArraysDimensions.png)
 
 Таким образом **СТРОКИ есть ВСЕГДА** (первый индекс), а **колонки опциональны** (второй индекс). При этом количество колонок может меняться от строчки к строчке.
 
 ----
 
-## [↑](#home) <a id="convert"></a> Convert 1D Array Into 2D Array
-Рассмотрим задачу **"[Convert 1D Array Into 2D Array](https://leetcode.com/problems/convert-1d-array-into-2d-array/)"**:
+## [↑](#home) <a id="convert"></a> 2022. Convert 1D Array Into 2D Array
+Рассмотрим задачу **"[2022. Convert 1D Array Into 2D Array](https://leetcode.com/problems/convert-1d-array-into-2d-array/)"**:
 > Дан одномерный массив чисел. Нужно его превратить в двумерный массив из m строк и n столбцов.
 
 На самом деле решение простое. Нам понадобится два счётчика: колонки и столбцы.\
 Когда указатель столбца доходит до лимита, то мы просто его сбрасываем и инкрементируем счётчик строк:
 
-![](../img/arrays/To2DArray.png)
+![](../../img/arrays/2D/To2DArray.png)
 
 Тогда для решения заведём два указателя: row и column. Когда column будет доходить до n то мы будем переходить на новую строку:
 ```java
@@ -78,13 +78,13 @@ public int[][] construct2DArray(int[] original, int m, int n) {
 
 ----
 
-## [↑](#home) <a id="spiral"></a> Spiral Matrix
-Рассмотрим задачу **"[Spiral Matrix](https://leetcode.com/problems/spiral-matrix/)"**:
+## [↑](#home) <a id="spiral"></a> 54. Spiral Matrix
+Рассмотрим задачу **"[54. Spiral Matrix](https://leetcode.com/problems/spiral-matrix/)"**:
 > Дан двумерный массив. Нужно его обойти по спирали.
 
 Для решения нам понадобится завести указатели, которые будут ограничивать наш обход с разных сторон:
 
-![](../img/arrays/SpiralMatrix.png)
+![](../../img/arrays/2D/SpiralMatrix.png)
 
 Код решения:
 ```java
@@ -124,17 +124,17 @@ public List<Integer> spiralOrder(int[][] matrix) {
 
 ----
 
-## [↑](#home) <a id="2dsearch"></a> Search a 2D Matrix
-Рассмотрим задачу **"[Search a 2D Matrix](https://leetcode.com/problems/search-a-2d-matrix/)"**:
+## [↑](#home) <a id="2dsearch"></a> 74. Search a 2D Matrix
+Рассмотрим задачу **"[74. Search a 2D Matrix](https://leetcode.com/problems/search-a-2d-matrix/)"**:
 > Дан двумерный массив. В каждой строке элементы отсортированы по возростоящей. Каждая строка начинается с элемента, который больше чем последний элемент прошлой строки. Ответить на вопрос: есть ли искомый элемент target в двумерном массиве.
 
 Для начала стоит вспомнить как работает бинарный поиск:
 
-![](../img/arrays/BinarySearch.png)
+![](../../img/arrays/2D/BinarySearch.png)
 
 Теперь применим его к нашему двумерному массиву. Но при помощи бинарного поиска мы сначала будем искать строки:
 
-![](../img/arrays/2DMatrixRowSearch.png)
+![](../../img/arrays/2D/2DMatrixRowSearch.png)
 
 Таким образом, мы сначала находим интересующую нас строку:
 ```java
@@ -176,8 +176,8 @@ return false;
 
 ----
 
-## [↑](#home) <a id="rotate"></a> Rotate Image
-Рассмотрим задачу **"[Rotate Image](https://leetcode.com/problems/rotate-image/)"**:
+## [↑](#home) <a id="rotate"></a> 48. Rotate Image
+Рассмотрим задачу **"[48. Rotate Image](https://leetcode.com/problems/rotate-image/)"**:
 > Дан двумерный массив. Необходимо его повернуть по часовой стрелке. Таким образом числа, которые шли слева направо в первой строке станут образовывать последнюю колонку сверху вниз.
 
 Как обычно, отличный разбор у NeetCode: **"[Rotate Image - Matrix ](https://www.youtube.com/watch?v=fMSJSS7eO1w&t=1s)"**.
@@ -209,8 +209,8 @@ public void rotate(int[][] matrix) {
 
 ----
 
-## [↑](#home) <a id="matrixZeroes"></a> Set Matrix Zeroes
-Рассмотрим задачу [Set Matrix Zeroes](https://leetcode.com/problems/set-matrix-zeroes/).
+## [↑](#home) <a id="matrixZeroes"></a> 73. Set Matrix Zeroes
+Рассмотрим задачу [73. Set Matrix Zeroes](https://leetcode.com/problems/set-matrix-zeroes/).
 
 Разбор данной задачи можно посмотреть в видео от NeetCode: [Set Matrix Zeroes In-place](https://www.youtube.com/watch?v=T41rL0L3Pnw).
 
@@ -262,8 +262,8 @@ if (firstRowIsZero) {
 
 ----
 
-## [↑](#home) <a id="sudoku"></a> Valid Sudoku
-Разберём задачу **"[Valid Sudoku](https://leetcode.com/problems/valid-sudoku/)"**.\
+## [↑](#home) <a id="sudoku"></a> 36. Valid Sudoku
+Разберём задачу **"[36. Valid Sudoku](https://leetcode.com/problems/valid-sudoku/)"**.\
 Объяснение решение от NeetCode: [Valid Sudoku](https://www.youtube.com/watch?v=TjFXEUCMqI8).\
 Разбор задачи от Nick White: [LeetCode: Valid Sudoku](https://www.youtube.com/watch?v=Pl7mMcBm2b8).
 
@@ -289,7 +289,7 @@ for (int i = 0; i < board.length; i++) {
 
 Остаётся понять, как обрабатывать области внутри поля:
 
-![](../img/arrays/ValidSudoku.png)
+![](../../img/arrays/2D/ValidSudoku.png)
 
 ```java
 // Check cube
