@@ -1,18 +1,19 @@
-# <a id="home"></a> Trie
+# [←](../README.md) <a id="home"></a> Trie
 
 Данный раздел посвящён задачам на префиксное дерево (Trie) из **[Leetcode Patterns](https://seanprashad.com/leetcode-patterns/)**.
 
 **Table of Contents:**
-- [Implement Trie (Prefix Tree)](#implement)
-- [Longest Common Prefix](#longest)
-- [Design Add and Search Words Data Structure](#searchWords)
-- [Concatenated Words](#concatenated)
-- [Palindrome Pairs](#palindromePairs)
+- [[208] Implement Trie (Prefix Tree)](#implement)
+- [[14] Longest Common Prefix](#longest)
+- [[211] Design Add and Search Words Data Structure](#searchWords)
+- [[472] Concatenated Words](#concatenated)
+- [[336] Palindrome Pairs](#palindromePairs)
+- [Index Pairs of a String](#pairsindex)
 
 ----
 
-## [↑](#home) <a id="implement"></a> Implement Trie (Prefix Tree)
-Разберём задачу по реализации префиксного дерева: **"[Implement Trie (Prefix Tree)](https://leetcode.com/problems/implement-trie-prefix-tree/)"**.
+## [↑](#home) <a id="implement"></a> 208. Implement Trie (Prefix Tree)
+Разберём задачу по реализации префиксного дерева: **"[208. Implement Trie (Prefix Tree)](https://leetcode.com/problems/implement-trie-prefix-tree/)"**.
 
 Рассмотрим пример из двух слов: "apple" и "ape":
 
@@ -75,8 +76,8 @@ public boolean startsWith(String prefix) {
 
 ----
 
-## [↑](#home) <a id="longest"></a> Longest Common Prefix
-Разберём задачу **"[Longest Common Prefix](https://leetcode.com/problems/longest-common-prefix/)"**:
+## [↑](#home) <a id="longest"></a> 14. Longest Common Prefix
+Разберём задачу **"[14. Longest Common Prefix](https://leetcode.com/problems/longest-common-prefix/)"**:
 > Дан массив слов (например, "flower","flow","flight"). Нужно найти наибольший общий префикс для всех слов.
 
 Данную задачу можно решить при помощи просто строк:
@@ -132,8 +133,8 @@ public String longestCommonPrefix(String[] strs) {
 
 ----
 
-## [↑](#home) <a id="searchWords"></a> Design Add and Search Words Data Structure
-Разберём задачу **"[Design Add and Search Words Data Structure](https://leetcode.com/problems/design-add-and-search-words-data-structure/)"**:
+## [↑](#home) <a id="searchWords"></a> 211. Design Add and Search Words Data Structure
+Разберём задачу **"[211. Design Add and Search Words Data Structure](https://leetcode.com/problems/design-add-and-search-words-data-structure/)"**:
 > Нужно реализовать такую структуру, в которую можно добавлять слова, а потом их искать с возможностью замены поиска по конкретному символу на шаблон "точка".
 
 Отличный разбор задачи от NeetCode: [Design Add and Search Words Data Structure](https://www.youtube.com/watch?v=BTf05gs_8iU)
@@ -198,8 +199,8 @@ private boolean dfs(String word, int index, TrieNode root) {
 
 ----
 
-## [↑](#home) <a id="concatenated"></a> Concatenated Words
-Разберём задачу **"[Concatenated Words](https://leetcode.com/problems/concatenated-words/)"**:
+## [↑](#home) <a id="concatenated"></a> 472. Concatenated Words
+Разберём задачу **"[472. Concatenated Words](https://leetcode.com/problems/concatenated-words/)"**:
 > Дан массив из уникальных слов. Вернуть список тех слов, которые составлены из других слов.
 
 Разбор от NeetCode: **[Concatenated Words](https://www.youtube.com/watch?v=iHp7fjw1R28)**
@@ -259,8 +260,8 @@ public boolean search(String word, Set<String> wordsSet, Map<String, Boolean> ca
 
 ----
 
-## [↑](#home) <a id="palindromePairs"></a> Palindrome Pairs
-Разберём задачу **"[Palindrome Pairs](https://leetcode.com/problems/palindrome-pairs/)"**:
+## [↑](#home) <a id="palindromePairs"></a> 336. Palindrome Pairs
+Разберём задачу **"[336. Palindrome Pairs](https://leetcode.com/problems/palindrome-pairs/)"**:
 > Дан массив из строк. Нужно вернуть индексы тех слов, которые образуют пары, которые являются палиндромом.
 
 Разбор от Coders Camp: [Palindrome Pairs](https://youtu.be/iqM6xYQcsx0?si=N_rIeURrYmk_jp0S&t=168)
@@ -306,4 +307,70 @@ public List<List<Integer>> palindromePairs(String[] words) {
 
     return ans;
 }
+```
+
+## [↑](#home) <a id="pairsindex"></a> Index Pairs of a String
+Разберём задачу **"[Index Pairs of a String](https://www.codingninjas.com/codestudio/problems/ninja-and-index-pairs_1462451)"**.
+
+Для начала создадим структуру Trie:
+```java
+public static class Trie {
+    boolean is = false;
+    Trie[] ch = new Trie[26]; //a = 0, z = 25
+
+    void insert(String s) {
+        Trie parent = this;
+        for (int i = 0; i < s.length(); i++) {
+            int ch = s.charAt(i) - 'a';
+            if (parent.ch[ch] == null) {
+                parent.ch[ch] = new Trie();
+            }
+            // Each char = new step
+            // Each new step uses previous step as parent 
+            parent = parent.ch[ch];
+        }
+        parent.is = true;
+    }
+}
+```
+
+Для начала, нам нужно заполнить эту структуру данными:
+```java
+public static ArrayList<ArrayList<Integer>> indexPairs(String text, String words[]) {
+    Trie root = new Trie();
+    for (String word : words) {
+        root.insert(word);
+    }
+```
+
+Теперь остаётся только написать сам алгоритм:
+
+![](../img/PairsIndex.png)
+
+Нам понадобится два указателя:
+- Указатель i будет указывать на начало слова. То есть он будет вставать на некоторый символ и таким образом мы будем искать все слова, которые начинаются с этого символа. Это позволит в том числе найти все вхождения слов, которые встречаются несколько раз. Например 'cd' в строке 'abcdefcd'.
+- Указатель j будет идти по всем символам начиная с позиции i ожидая найти конец слова. Как только он находит конец слова - добавляем новую запись [i, j]
+
+Решение может выглядеть следующим образом:
+```java
+ArrayList<ArrayList<Integer>> result = new ArrayList<>();
+// Iterate over all character in text
+for (int i = 0; i < text.length(); i++) {
+    Trie node = root;
+    for (int j = i; j < text.length(); j++) {
+        int ch = text.charAt(j) - 'a';
+        if (node.ch[ch] == null) {
+            break;
+        }
+
+        node = node.ch[ch];
+        if (node.is) {
+            ArrayList<Integer> pair = new ArrayList<>();
+            pair.add(i);
+            pair.add(j);
+            result.add(pair);
+        }
+    }
+}
+return result;
 ```

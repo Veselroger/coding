@@ -1,60 +1,149 @@
-# <a id="home"></a> Sliding Window
+# [←](../README.md) <a id="home"></a> Sliding Window
 
 Данный раздел посвящён задачам на использование техники Sliding Window.\
 Продолжаем двигаться по [Roadmap](https://neetcode.io/roadmap) от NeetCode.\
 Данные задачи входят в том числе в **[Leetcode Patterns](https://seanprashad.com/leetcode-patterns/)**.
 
 **Table of Contents:**
-- [Max Consecutive Ones](#consecutive)
-- [Maximum Average Subarray I](#maxAverage)
-- [Minimum Size Subarray Sum](#minSize)
-- [Fruit Into Baskets](#fruits)
-- [Maximum Number of Vowels in a Substring of Given Length](#vowels) 
-- [Max Consecutive Ones III](#consecutive3)
-- [Longest Subarray of 1's After Deleting One Element](#afterDeleting)
-- [Best Time to Buy And Sell Stock](#bestTime)
-- [Best Time to Buy and Sell Stock II](#bestTime2)
-- [Longest Substring Without Repeating Characters](#longestSubstring)
-- [Longest Repeating Character Replacement](#longestRepeating)
-- [Permutation in string](#permutation)
-- [Minimum Window Substring](#minWindow)
-- [Sliding Window Maximum](#windowMax)
-- [Nearby Duplicate](#nearby)
-- [Nearby Almost Duplicate](#almostduplicate)
+- [[485] Max Consecutive Ones](#consecutive)
+- [[169] Majority Element](#majority)
+- [[1446] Consecutive Characters](#consecutiveChars)
+- [[643] Maximum Average Subarray I](#maxAverage)
+- [[209] Minimum Size Subarray Sum](#minSize)
+- [[219] Contains Duplicate II (Nearby Duplicate)](#nearby)
+- [[1456] Maximum Number of Vowels in a Substring of Given Length](#vowels) 
+- [[1004] Max Consecutive Ones III](#consecutive3)
+- [[1493] Longest Subarray of 1's After Deleting One Element](#afterDeleting)
+- [[3] Longest Substring Without Repeating Characters](#longestSubstring)
+- [[904] Fruit Into Baskets](#fruits)
+- [[424] Longest Repeating Character Replacement](#longestRepeating)
+- [[567] Permutation in string](#permutation)
+- [[76] Minimum Window Substring](#minWindow)
+- [[239] Sliding Window Maximum](#windowMax)
+- [[220] Nearby Almost Duplicate](#almostduplicate)
+- [[1838] Frequency of the Most Frequent Element](#frequency)
 
 ----
 
-## [↑](#home) <a id="consecutive"></a> Max Consecutive Ones
-Рассмотрим задачу "[Max Consecutive Ones](https://leetcode.com/problems/max-consecutive-ones/)":
+## [↑](#home) <a id="consecutive"></a> 485. Max Consecutive Ones
+Рассмотрим задачу "[485. Max Consecutive Ones](https://leetcode.com/problems/max-consecutive-ones/)":
 > Дан массив из единиц и нулей. Найти размер самой длинной последовательности из единиц.
+
+Базовая задача на понимание техники **Sliding Window**.\
+Sliding Window - это "развитие" идеи [Two Pointers](../pages/TwoPointers.md).
+
+Нам нужно найти самый длинный подмассив, который содерджит только единицы.\
+Как только мы встречаем единицу - мы начинаем считать подмассив.\
+Как только встречаем не единицу - обновлем (если надо) известный максимум и сбрасываем подмассив.
+
+Таким образом, при встрече единицы мы как бы оставляем мысленно один указатель.\
+А второй указатель "растягивает" окно, пока удовлетворяется условие - "содержит только единицы".
+
+Визуально представить это можно следующим образом:
+
+![](../img/window/ConsecutiveOnes.gif)
 
 Разбор решения от Nick White: [LeetCode Max Consecutive Ones Solution Explained](https://www.youtube.com/watch?v=PLa4tYQhqoU)
 
-Решение:
+<details><summary>Решение</summary>
+
 ```java
 public int findMaxConsecutiveOnes(int[] nums) {
     int cur = 0, max = 0;
-    for (int i = 0; i < nums.length; i++) {
-        if (nums[i] == 1) {
-            cur++;
-            max = Math.max(max, cur);
+    for (int num : nums) {
+        if (num == 0) {
+            cur = 0; // Reset window
         } else {
-            cur = 0;
+            cur++; // Extend window (grow)
+            max = Math.max(max, cur); // Check for each step
         }
     }
-    return max;
+    return max;   
 }
 ```
+</details>
 
 ----
 
-## [↑](#home) <a id="maxAverage"></a> Maximum Average Subarray I
-Рассмотрим задачу "[Maximum Average Subarray I](https://leetcode.com/problems/maximum-average-subarray-i/)":
-> Дан массив из чисел и некоторый размер окна k. Нужно найти максимальное среднее значение среди всех "окон".
+## [↑](#home) <a id="majority"></a> 169. Majority Element
+Рассмотрим задачу [169. Majority Element](https://leetcode.com/problems/majority-element/).
+
+Задача с интересным подходом к Sliding Window.
+
+Эта задача easy по коду, но до её решения нужно додуматься.\
+Предположим, у нас есть набор чисел ``[2,2,1,1,1,2,2]``:
+
+![](../img/window/Majority.png)
+
+Если посмотреть, то можно заметить правильный подход:
+```java
+public int majorityElement(int[] nums) {
+    int cnt = 0, res = 0;
+    for (int num : nums) {
+        if (cnt == 0) res = num;
+        if (res == num) {
+            cnt++;
+        }  else {
+            cnt--;
+        }
+    }
+    return res;
+}
+```
+По умолчанию у нас счётчик нулевой. Каждый раз, когда счётчик в положении ноль мы запоминаем текущее число. И каждый раз, когда текущее число совпадает с тем числом, которые мы запомнили мы увеличиваем счётчик. При этом, если текущее число и то число, которое мы запомнили, различаются, то счётчик мы уменьшаем.
+
+Разбор задачи: [NeetCode: Majority Element](https://www.youtube.com/watch?v=7pnhv842keE)
+
+Интересно, что у данной задачи есть продолжение: [229. Majority Element II](https://leetcode.com/problems/majority-element-ii/)
+
+----
+
+## [↑](#home) <a id="consecutiveChars"></a> 1446. Consecutive Characters
+Рассмотрим задачу "[1446. Consecutive Characters](https://leetcode.com/problems/consecutive-characters/description/)":
+> Дан массив из цифр. Нужно найти самую длинную последовательность из одинаковых цифр.
+
+Данная задача очень похожа на [Max Consecutive Ones](#consecutive).\
+Единственное, мы должны отслеживать символ текущей последовательности.
+
+![](../img/window/ConsecutiveCharacters.png)
+
+<details><summary>Решение</summary>
+
+```java
+public int maxPower(String s) {
+    char lastChar = s.charAt(0);
+    int power = 0, maxPower = 0;
+    for (char chr : s.toCharArray()) {
+        if (lastChar == chr) {
+            power++; // Increase current power
+            maxPower = Math.max(maxPower, power); // Maybe new maximum?
+        } else {
+            lastChar = chr; // new sequence with different char
+            power = 1; // new power calculation
+        }
+    }
+    return maxPower;
+}
+```
+</details>
+
+----
+
+## [↑](#home) <a id="maxAverage"></a> 643. Maximum Average Subarray I
+Рассмотрим задачу "[643. Maximum Average Subarray I](https://leetcode.com/problems/maximum-average-subarray-i/)":
+> Дан массив из чисел и размер окна k. Нужно найти максимальное среднее значение среди всех "окон".
 
 Разбор задачи: [Coding with Christian: Maximum Average Subarray I](https://www.youtube.com/watch?v=d9bT1paHGHw).
 
-Решение:
+Для решения нам нужно сделать два действия: вычислить окно (из k элементов).\
+Дальше нам нужно "двигать" окно вправо.\
+Для этого в окно добавляем новый элемент справа (i) и убираем из окна элемент слева (i - k).\
+Остаётся найти максимальное окно из k элементов и вычислить для него среднее.
+
+![](../img/window/AverageSubarray.gif)
+
+<details><summary>Решение</summary>
+
 ```java
 public double findMaxAverage(int[] nums, int k) {
     double window = 0;
@@ -62,6 +151,7 @@ public double findMaxAverage(int[] nums, int k) {
     for (int i = 0; i < k; i++) {
         window = window + nums[i];
     }
+
     double result = window;
     for (int i = k; i < nums.length; i++) {
         // Expand window to the right and shrink the left border
@@ -71,23 +161,32 @@ public double findMaxAverage(int[] nums, int k) {
     return result / k;
 }
 ```
+</details>
 
 ----
 
-## [↑](#home) <a id="minSize"></a> Minimum Size Subarray Sum
-Рассмотрим задачу "[Minimum Size Subarray Sum](https://leetcode.com/problems/minimum-size-subarray-sum/)":
-> Дан массив положительных чисел и некоторое целевое число target. Найти минимальный размер подмассива, сумма которого равна или больше чем target. Если такого нет - вернуть ноль.
+## [↑](#home) <a id="minSize"></a> 209. Minimum Size Subarray Sum
+Рассмотрим задачу "[209. Minimum Size Subarray Sum](https://leetcode.com/problems/minimum-size-subarray-sum/)":
+> Дан массив положительных чисел и целевое число target. Найти минимальный размер подмассива, сумма которого равна или больше чем target. Если такого нет - вернуть ноль.
 
-Разбор от NeetCode: [Minimum Size Subarray Sum](https://www.youtube.com/watch?v=aYqYMIqZx5s)
+То, что мы собираемся найти подмассив подсказывает нам, что тут может подойти Sliding Window.\
+Учитывая, что числа только положительные, то чем больше "окно", тем больше будет сумма.\
+Получается, что увеличивая справа окно - сумма увеличивается, а уменьшая слева - сумма уменьшается.\
+Тогда мы можем адаптировать размер окна, чтобы найти минимальное окно с нужной суммой.
 
-Решение:
+![](../img/window/MinimumSizeSubarraySum.gif)
+
+Разбор задачи: **[NeetCode: Minimum Size Subarray Sum](https://www.youtube.com/watch?v=aYqYMIqZx5s)**
+
+<details><summary>Решение</summary>
+
 ```java
 public int minSubArrayLen(int target, int[] nums) {
     int total = 0, length = Integer.MAX_VALUE;
     int left = 0;
     for (int right = 0; right < nums.length; right++) {
         total = total + nums[right];
-            
+        // Adjust window when sum is too big  
         while (total >= target) {
             length = Math.min(length, right - left + 1);
             total = total - nums[left];
@@ -97,52 +196,215 @@ public int minSubArrayLen(int target, int[] nums) {
     return length != Integer.MAX_VALUE ? length : 0;
 }
 ```
+</details>
 
 ----
 
-## [↑](#home) <a id="fruits"></a> Fruit Into Baskets
-Рассмотрим задачу "[Fruit Into Baskets](https://leetcode.com/problems/fruit-into-baskets/)":
+## [↑](#home) <a id="nearby"></a> 219. Contains Duplicate II (Nearby Duplicate)
+Есть усложнённая версия поиска дубликатов: **"[219. Contains Duplicate II](https://leetcode.com/problems/contains-duplicate-ii/)"**:
+> Необходимо проверить массив на дубликаты в пределах подмассива длинной K.
+
+Нужно смотреть на дубликаты только в определённом диапазоне, т.е. нужно рассматривать только некоторую ограниченную область.\
+Такую область называют "окном", а название подхода - **"[Window Sliding](https://www.geeksforgeeks.org/window-sliding-technique/)"**.
+
+![](../img/window/NearbyDuplicate.png)
+
+Как видно, мы анализируем на 1 элемент больше, чем размер окна. При этом перед следующим заходом мы должны компенсировать это различие:
+```java
+public boolean containsNearbyDuplicate(int[] nums, int k) {
+    Set<Integer> seen = new HashSet<>();
+    // It's important for us to know about current index (i.e. current position)
+    for (int i = 0; i < nums.length; i++) {
+        if (!seen.add(nums[i])) {
+            return true;
+        }
+        // Maintain window size. Remove element by value of element that is
+        // For [1,2,3,4,5] and k=3 after addition of 4 we should remove inxed 3-3=0
+        if (seen.size() > k) seen.remove(nums[i-k]);
+    }
+    return false;
+}
+```
+
+---
+
+## [↑](#home) <a id="vowels"></a> 1456. Maximum Number of Vowels in a Substring of Given Length
+Рассмотрим задачу "[1456. Maximum Number of Vowels in a Substring of Given Length](https://leetcode.com/problems/maximum-number-of-vowels-in-a-substring-of-given-length/)":
+> Дана строка S и некоторое число K. Вернуть максимальное число гласных в подстроке длинной в K.
+
+Разбор задачи от NeetCode: [Maximum Number of Vowels in a Substring of Given Length](https://www.youtube.com/watch?v=kEfPSzgL-Ss).
+
+Нам потребуется определять, является ли символ гласной или нет:
+```java
+private boolean isVowel(char charToTest) {
+    return switch(charToTest) {
+        case 'a', 'e', 'i', 'o', 'u' -> true;
+        default -> false;
+    };
+}
+```
+
+Данная задача похожа на задачу **"[Maximum Average Subarray I](#maxAverage)"**.
+
+![](../img/window/Vowels.gif)
+
+Мы идём правым указателем слева направо. Если встречаем гласную - увеличиваем счётчик.
+Дальше мы вычисляем текущую длину окна. Если окно слишком большое - сдвигаем левый указатель.\
+**НО** перед сдвигом левого указателя мы смотрим, если из окна убирается гласная - уменьшаем счётчик.\
+На каждом сдвиге окна (т.е. правого указателя) вычисляем максимум.
+
+Главная особенность: нам **НЕ** важно сколько конкретно каких гласных мы встретили.\
+То есть достаточно логики гласная/не гласная.
+
+<details><summary>Решение</summary>
+
+```java
+public int maxVowels(String s, int k) {
+    int cnt = 0, result = 0;
+    int left = 0;
+    for (int right = 0; right < s.length(); right++) {
+        if (isVowel(s.charAt(right))) cnt++;
+
+        int size = right - left + 1;
+        if (size > k) {
+            if (isVowel(s.charAt(left))) cnt--;
+            left++; // move left border
+        }
+        result = Math.max(result, cnt);
+    }
+    return result;
+}
+```
+</details>
+
+----
+
+## [↑](#home) <a id="consecutive3"></a> 1004. Max Consecutive Ones III
+Рассмотрим задачу "[1004. Max Consecutive Ones III](https://leetcode.com/problems/max-consecutive-ones-iii/)":
+> Дан массив из единиц и нулей, а так же число K. Вернуть максимальную длину последовательности единиц с учётом того, что мы можем изменить нули на единицу не больше чем K раз.
+
+Разбор решения от Ihor Codes: [Разбор Max Consecutive Ones III](https://www.youtube.com/watch?v=2ZjDR5fjQj8).
+
+Это интересная задача про то, что окно может быть задано не напрямую как размер, а как некоторое условие.\
+Например, окно не должно включать в себя больше чем K замен нулей на единицы.
+
+![](../img/window/MaxConsecutiveOnes.gif)
+
+Получается, что мы идём слева направо.\
+Если встречаем ноль, то мы уменьшаем кол-во доступных изменений нулей на единицы.\
+Если мы не можем заменить ноль на единицу - сокращаем окно до тех пор, пока не сможем.\
+Каждый шаг заканчиваем тем, что проверяем, какую максимальную длину последовательности мы знаем.
+
+<details><summary>Решение</summary>
+
+```java
+public int longestOnes(int[] nums, int k) {
+    int zeroes = 0;
+    int result = 0;
+    int left = 0;
+    for (int right = 0; right < nums.length; right++) {
+        if (nums[right] == 0) {
+            // No more changes left. Free some swaps (i.e. reduce window size)
+            while (zeroes >= k) {
+                if (nums[left] == 0) zeroes--;
+                left++;
+            }
+            zeroes++;
+        }
+        result = Math.max(result, right - left + 1);
+    }
+    return result;
+}
+```
+</details>
+
+----
+
+## [↑](#home) <a id="afterDeleting"></a> 1493. Longest Subarray of 1's After Deleting One Element
+Рассмотрим задачу "[1493. Longest Subarray of 1's After Deleting One Element](https://leetcode.com/problems/longest-subarray-of-1s-after-deleting-one-element/)":
+> Дан массив из единиц и нулей. Вернуть максимальную длину последовательности единиц с учётом того, что мы обязаны удалить ОДИН элемент.
+
+Разбор решения: **"[Solving the 'Longest Subarray of 1's After Deleting One Element' Problem in Java](https://www.youtube.com/watch?v=zuMwPkI4nnU)"**.
+
+Вариация на тему задачи "[Max Consecutive Ones III](#consecutive3)", только k всегда будет равен 1.\
+У нас есть окно, внутри которого может быть не больше одной замены (т.к. будет лишь одно удаление, т.е. один элемент не важен).
+Получается, мы просто ищем максимальную последовательность с одной заменой и возвращаем длину на единицу меньше.
+
+<details><summary>Решение</summary>
+
+```java
+public int longestSubarray(int[] nums) {
+    int zeroes = 0;
+    int result = 0;
+    int left = 0;
+    for (int right = 0; right < nums.length; right++) {
+        if (nums[right] == 0) zeroes++;
+        while (zeroes > 1) {
+            if (nums[left] == 0) zeroes--;
+            left++;
+        }
+        result = Math.max(result, right - left + 1);
+    }
+    return result - 1;
+}
+```
+</details>
+
+----
+
+## [↑](#home) <a id="longestSubstring"></a> 3. Longest Substring Without Repeating Characters
+Разберём задачу **"[3. Longest Substring Without Repeating Characters](https://leetcode.com/problems/longest-substring-without-repeating-characters/)"**:
+> Дана строка s. Нужно найти длину максимальной подстроки без повторных символов
+
+Разбор от NeetCode: [Longest Substring Without Repeating Characters](https://www.youtube.com/watch?v=wiGpQwVHdE0).
+
+Мы ищем substring (т.е. окно), которое удовлетворяет некоторому условию.\
+Чтобы устранять дубли подойдёт HashSet.
+
+![](../img/window/longestSubstring.png)
+
+Получается, что мы управляем "окном" значений, представленный хэшсетом.\
+Если элемента в окне нет - мы расширяем окно.\
+Если элемент есть - сужаем до тех пор, пока все значения в окне не будут уникальны.\
+Ведь значения должны идти друг за другом (например окно "ABCB" нужно сжать до "CB" чтобы не было повторений). 
+
+<details><summary>Решение</summary>
+
+```java
+public int lengthOfLongestSubstring(String s) {
+    int max = 0;
+
+    Set<Character> seen = new HashSet<>();
+    int left = 0;
+    for (int right = 0; right < s.length(); right++) {
+        while (seen.contains(s.charAt(right))) {
+            seen.remove(s.charAt(left));
+            left++;
+        }
+        seen.add(s.charAt(right));
+        max = Math.max(max, seen.size());
+    }
+    return max;
+}
+```
+</details>
+
+----
+
+## [↑](#home) <a id="fruits"></a> 904. Fruit Into Baskets
+Рассмотрим задачу "[904. Fruit Into Baskets](https://leetcode.com/problems/fruit-into-baskets/)":
 > У нас есть две карзины, каждая из которых может содержать фрукты только одного типа, но их количество не ограничено. Так же дан ряд деревьев. Можно начать с любого из них, но как только мы достигнем дерево, с которого мы не можем снять фрукт мы останавливаемся. Вернуть максимальное кол-во фруктов, которое можно собрать.
 
 Разбор задачи от NeetCode: [Fruit Into Baskets Solution](https://www.youtube.com/watch?v=yYtaV0G3mWQ).\
 Разбор задачи от Nick White: [LeetCode Fruit Into Baskets Solution Explained](https://www.youtube.com/watch?v=s_zu2dOkq80).
 
-К решению данной задачи есть два разных подхода.
+Данная задача похожа не предыдущие, т.к. она тоже про окно.\
+Однако, условие его поддержания в правильном состоянии несколько сложнее, т.к. надо учитывать количество элементов с разным значением.\
+Поэтому, мы воспользуемся HashMap как вспомогательной структурой данных:
 
-Один из них - через набор из разных указателей. Довольно интересный подход, главное не запутаться =)
+![](../img/window/FruitIntoBaskets.gif)
 
-![](../img/window/Fruits.png)
-
-Решение:
-```java
-public int totalFruit(int[] fruits) {
-    int actFruit = -1, prevFruit = -1;
-    int actFruitCnt = 0;
-    int curMax = 0, total = 0;
-
-    for (int fruit : fruits) {
-        if (fruit == actFruit || fruit == prevFruit) {
-            curMax++; // The same sequence
-        } else {
-            curMax = actFruitCnt + 1; // new element, forget sequence start 
-        }
-        if (fruit == actFruit) {
-            actFruitCnt++;
-        } else {
-            // Update/switch actual fruit
-            prevFruit = actFruit;
-            actFruit = fruit;
-            actFruitCnt = 1;
-        }
-        total = Math.max(total, curMax);
-    }
-    return total;
-}
-```
-
-Другое решение проще в реализации, но требует дополнительного места:
-
-![](../img/window/Fruits-2.png)
+<details><summary>Решение</summary>
 
 ```java
 public int totalFruit(int[] fruits) {
@@ -168,225 +430,12 @@ public int totalFruit(int[] fruits) {
     return result;
 }
 ```
+</details>
 
 ----
 
-## [↑](#home) <a id="vowels"></a> Maximum Number of Vowels in a Substring of Given Length
-Рассмотрим задачу "[Maximum Number of Vowels in a Substring of Given Length](https://leetcode.com/problems/maximum-number-of-vowels-in-a-substring-of-given-length/)":
-> Дана строка S и некоторое число K. Вернуть максимальное число гласных в подстроке длинной в K.
-
-Разбор задачи от NeetCode: [Maximum Number of Vowels in a Substring of Given Length](https://www.youtube.com/watch?v=kEfPSzgL-Ss).
-
-![](../img/window/MaxVowels.png)
-
-Решение:
-```java
-public int maxVowels(String s, int k) {
-    char[] vowels = {'a', 'e', 'i', 'o', 'u'};
-    int cnt = 0;
-    int l = 0;
-    int result = 0;
-    for (int r = 0; r < s.length(); r++) {
-        if (Arrays.binarySearch(vowels, s.charAt(r)) >= 0) {
-            cnt++;
-        }
-            
-        int size = r - l + 1;
-        if (size > k) {
-            if (Arrays.binarySearch(vowels, s.charAt(l)) >= 0) {
-                cnt--;
-            }
-            l++;
-        }
-        result = Math.max(result, cnt);
-    }
-    return result;
-}
-```
-
-----
-
-## [↑](#home) <a id="consecutive3"></a> Max Consecutive Ones III
-Рассмотрим задачу "[Max Consecutive Ones III](https://leetcode.com/problems/max-consecutive-ones-iii/)":
-> Дан массив из единиц и нулей, а так же число K. Вернуть максимальную длину последовательности единиц с учётом того, что мы можем изменить нули на единицу не больше чем K раз.
-
-Разбор решения от Ihor Codes: [Разбор Max Consecutive Ones III](https://www.youtube.com/watch?v=2ZjDR5fjQj8).
-
-```java
-public int longestOnes(int[] nums, int k) {
-    int zeroes = 0;
-    int result = 0;
-    int left = 0;
-    for (int right = 0; right < nums.length; right++) {
-        if (nums[right] == 0) {
-            while (zeroes >= k) {
-                if (nums[left] == 0) zeroes--;
-                left++;
-            }
-            zeroes++;
-        }
-        result = Math.max(result, right - left + 1);
-    }
-    return result;
-}
-```
-
-----
-
-## [↑](#home) <a id="afterDeleting"></a> Longest Subarray of 1's After Deleting One Element
-Рассмотрим задачу "[Longest Subarray of 1's After Deleting One Element](https://leetcode.com/problems/longest-subarray-of-1s-after-deleting-one-element/)":
-> Дан массив из единиц и нулей. Вернуть максимальную длину последовательности единиц с учётом того, что мы обязаны удалить ОДИН элемент.
-
-Разбор решения: **"[Solving the 'Longest Subarray of 1's After Deleting One Element' Problem in Java](https://www.youtube.com/watch?v=zuMwPkI4nnU)"**.
-
-```java
-public int longestSubarray(int[] nums) {
-    int zeroes = 0;
-    int result = 0;
-    int left = 0;
-    for (int right = 0; right < nums.length; right++) {
-        if (nums[right] == 0) zeroes++;
-        while (zeroes > 1) {
-            if (nums[left] == 0) zeroes--;
-            left++;
-        }
-        result = Math.max(result, right - left + 1);
-    }
-    return result - 1;
-}
-```
-
-Есть ещё одно хитрое решение:
-```java
-public int longestSubarray(int[] nums) {
-    // Number of ones before and after the last zero
-    int beforeZero = 0, afterZero = 0;
-    int result = 0;
-    for(int i : nums) {
-        if(i == 0) {
-            result = Math.max(result, beforeZero + afterZero);
-            beforeZero = afterZero;
-            afterZero = 0;
-        } else {
-            afterZero++;
-        }
-    }
-    //if there is no 0's in array , then one 1 should be deleted
-    if(afterZero == nums.length) return nums.length - 1; 
-        
-    return Math.max(result, beforeZero + afterZero);
-}
-```
-
-----
-
-## [↑](#home) <a id="bestTime"></a> Best Time to Buy And Sell Stock
-Рассмотрим задачу "[Best Time to Buy And Sell Stock](https://leetcode.com/problems/best-time-to-buy-and-sell-stock/)":
-> Дан массив, где каждый элемент - это цена на конкретный день. Нужно найти максимальную выгоду от покупки в один ден и продажи в другой.
-
-Разбор задачи от NeetCode: [Sliding Window: Best Time to Buy and Sell Stock](https://www.youtube.com/watch?v=1pkOgXD63yU).\
-Разбор задачи от Сергея Пузанковым: [Лучшее время для покупки акций](https://www.youtube.com/watch?v=wm8hhQyIR9o).
-
-Начнём, как обычно, с визуализации примера с LeetCode:
-
-![](../img/window/BestTime.png)
-
-Когда выгодно купить, если мы можем купить всего один раз? Когда цена минимальная.\
-Когда выгодно продать, если мы можем продать всего один раз? Когда цена максимальна.
-
-Получаем два указателя (и **two pointers** задачу): L (left, покупка) и R (right, продажа).\
-Если покупка (L) меньше продажи (R): считаем выгоду (profit) и запоминаем максимальный профит на текущий момент.\
-Если покупка (R) больше продажи (R): найден новый самый минимальный элемент.
-
-```java
-public int maxProfit(int[] prices) {
-    int maxProfit = 0;
-    int l = 0, r = 1;
-    while (r < prices.length) {
-        if (prices[l] < prices[r]) {
-            int profit = prices[r] - prices[l];
-            maxProfit = Math.max(maxProfit, profit);
-        } else {
-            l = r;
-        }
-        r++;
-    }
-    return maxProfit;
-}
-```
-
-Ту же задачу можно решить немного по-другому, не через указатели, а манипулируя только понятиями "минимальный элемент" (ограничивает зону элементов, которые мы рассматриваем) и "максимальная выгода":
-```java
-public int maxProfit(int[] prices) {
-    int maxProfit = 0;
-    int minElement = prices[0];
-
-    for (int price : prices) {
-        // Profit is when price bigger than min element
-        maxProfit = Math.max(maxProfit, price - minElement);
-        minElement = Math.min(minElement, price);
-    }
-    return maxProfit;
-}
-```
-
-----
-
-## [↑](#home) <a id="bestTime2"></a> Best Time to Buy and Sell Stock II
-Разберём задачу **"[Best Time to Buy and Sell Stock II](https://leetcode.com/problems/best-time-to-buy-and-sell-stock-ii)"**.\
-В отличии от первой части задачи, теперь мы можем иметь несколько транзакций (т.е. пар купил-продал).
-
-Важно увидеть, что если у нас есть последовательность вроде [1,7,3,5], то если у нас есть несколько транзакций, то всегда выгоднее купить тогда, когда дальше следует рост, т.е. el[i] < el[i+1], а продать тогда, когда дальше следует падение el[i] > el[i+1]. Может захотеть запоминать крайние состояния, но если мы будем просто добавлять к профиту каждый кусочек, то нам не нужно даже ничего запоминать.
-
-```java
-public int maxProfit(int[] prices) {
-    int profit = 0;
-    for (int i = 1; i < prices.length; i++) {
-        if (prices[i] > prices[i-1]) {
-            profit = profit + (prices[i] - prices[i-1]);
-        }
-    }
-    return profit;
-}
-```
-
-----
-
-## [↑](#home) <a id="longestSubstring"></a> Longest Substring Without Repeating Characters
-Разберём задачу **"[Longest Substring Without Repeating Characters](https://leetcode.com/problems/longest-substring-without-repeating-characters/)"**:
-> Дана строка s. Нужно найти длину максимальной подстроки без повторных символов
-
-Разбор от NeetCode: [Longest Substring Without Repeating Characters](https://www.youtube.com/watch?v=wiGpQwVHdE0).
-
-![](../img/window/longestSubstring.png)
-
-Получается, что мы управляем "окном" значений, представленный хэшсетом. Если элемента в окне нет - мы расширяем окно. Если элемент есть - сужаем до тех пор, пока все значения в окне не будут уникальны, ведь значения должны идти друг за другом (например окно "ABCB" нужно сжать до "CB" чтобы не было повторений). 
-
-Решение:
-```java
-public int lengthOfLongestSubstring(String s) {
-    int left = 0, right = 0;
-    int max = 0;
-    Set<Character> set = new HashSet<>();
-
-    while (right < s.length()) {
-        if (!set.contains(s.charAt(right))){
-            set.add(s.charAt(right));
-            right++;
-            max = Math.max(max, set.size());
-        } else {
-            set.remove(s.charAt(left));
-            left++;
-        }
-    }
-    return max;
-}
-```
-
-----
-
-## [↑](#home) <a id="longestRepeating"></a> Longest Repeating Character Replacement
-Разберём задачу **"[Longest Repeating Character Replacement](https://leetcode.com/problems/longest-repeating-character-replacement/)"**:
+## [↑](#home) <a id="longestRepeating"></a> 424. Longest Repeating Character Replacement
+Разберём задачу **"[424. Longest Repeating Character Replacement](https://leetcode.com/problems/longest-repeating-character-replacement/)"**:
 > Дана строка s и некоторое число k. Нужно найти самую длинную строку из одинаковых символов с учётом того, что у нас есть k раз, которые мы можем заменить любой символ на любой другой нужный нам символ.
 
 Разбор от NeetCode: [Longest Repeating Character Replacement](https://www.youtube.com/watch?v=gqXU1UyA8pk).
@@ -407,11 +456,11 @@ public int characterReplacement(String s, int k) {
             
         maxCount = Math.max(maxCount, curCharCount);
         // Sequence length : right - left + 1 
-        while(right - left + 1 - maxCount > k) {
+        while((right - left + 1) - maxCount > k) {
             chars[s.charAt(left) - 'A']--;
             left++;
         }
-        maxLength = Math.max(maxLength, right - left + 1);
+        maxLength = Math.max(maxLength, (right - left + 1));
     }
     return maxLength;
 }
@@ -419,54 +468,70 @@ public int characterReplacement(String s, int k) {
 
 ----
 
-## [↑](#home) <a id="permutation"></a> Permutation in string
-Разберём задачу **"[Permutation in string](https://leetcode.com/problems/permutation-in-string/)"**:
+## [↑](#home) <a id="permutation"></a> 567. Permutation in string
+Разберём задачу **"[567. Permutation in string](https://leetcode.com/problems/permutation-in-string/)"**:
 > Дано две строки s1 и s2. Вернуть true если строка 2 содержит перестановку строки s1. Например, строка eidbaooo содержит перстановку ab.
 
 Разбор от NeetCode: [Permutation in string](https://www.youtube.com/watch?v=UbyhOgBN834).
 
-Код решения:
+Получается, нам нужно найти такое "окно" в строке 2, в котором есть точно такие же символы, как в строке 1:
+
+![](../img/window/Permutations.png)
+
+
+<details><summary>Решение</summary>
+
 ```java
 public boolean checkInclusion(String s1, String s2) {
+    // It should be possible to put s1 into s2:
     if (s2.length() < s1.length()) return false;
-    // Represent strings as "buckets" hash
+        
+    // Represent strings as "buckets" hash (alphabet has 26 chars)
     int[] source = new int[26];
     int[] target = new int[26];
-    // Source string length == sliding window size
-    // Count letters in the "window"
+    
+    // Fill up buckets
     for (int i = 0; i < s1.length(); i++) {
-        source[s1.charAt(i) - 'a']++;
-        target[s2.charAt(i) - 'a']++;
+        int charInd = s1.charAt(i) - 'a';
+        source[charInd]++;
+        target[charInd]++;
     }
-    // Count matches for the window initial position
+
+    // Buckets are ready. Init the initial window state
     int matches = 0;
-    for (int i = 0; i < 26; i++) {
+    for (int i = 0; i < source.length; i++) {
         if (source[i] == target[i]) matches++;
     }
-    // Move sliding window
+    
+    // Apply sliding window.
+    // First iteration from s1.length() already moves window right from initial state
     int left = 0;
     for (int right = s1.length(); right < s2.length(); right++) {
         if (matches == 26) return true;
-        // Shift window right boundary
+        
+        // Window extension action (move right boundary)
         int index = s2.charAt(right) - 'a';
-        target[index]++;
+        target[index]++; // Incremenet the "seen" state for character 
         if (source[index] == target[index]) matches++;
-        if (source[index] + 1 == target[index]) matches--; // Found more than we saw
-        // Shift window left boundary 
+        if (source[index] + 1 == target[index]) matches--; // Found more than we saw. Only for first diff event.
+    
+        // Move window left boundary
         index = s2.charAt(left) - 'a';
         target[index]--;
         if (source[index] == target[index]) matches++;
-        if (source[index] -1 == target[index]) matches--; // See less than before
+        if (source[index] - 1 == target[index]) matches--; // See less than before. Only for first diff event.
         left++;
     }
+    // Check that we have all matches
     return (matches == 26);
 }
 ```
+</details>
 
 ----
 
-## [↑](#home) <a id="minWindow"></a> Minimum Window Substring
-Разберём задачу **"[Minimum Window Substring](https://leetcode.com/problems/minimum-window-substring/)"**:
+## [↑](#home) <a id="minWindow"></a> 76. Minimum Window Substring
+Разберём задачу **"[76. Minimum Window Substring](https://leetcode.com/problems/minimum-window-substring/)"**:
 > Дано две строки s и t. Нужно вернуть минимальную длину "окна", в котором встретятся все символы из строки t (включая повторы).
 
 Разбор от NeetCode: [Minimum Window Substring](https://www.youtube.com/watch?v=jSto0O4AJbM).
@@ -514,8 +579,8 @@ public String minWindow(String s, String t) {
 
 ----
 
-## [↑](#home) <a id="windowMax"></a> Sliding Window Maximum
-Разберём задачу **"[Sliding Window Maximum](https://leetcode.com/problems/sliding-window-maximum/)"**:
+## [↑](#home) <a id="windowMax"></a> 239. Sliding Window Maximum
+Разберём задачу **"[239. Sliding Window Maximum](https://leetcode.com/problems/sliding-window-maximum/)"**:
 > Дан массив из чисел и размер "окна" через которое мы смотрим на массив. Окно двигается на 1 позицию вправо каждый раз. Нужно вернуть массив макимумов, которые мы видим на каждой итерации.
 
 Разбор от NeetCode: [Sliding Window Maximum - Monotonic Queue](https://www.youtube.com/watch?v=DfljaUwZsOk).
@@ -525,6 +590,7 @@ public String minWindow(String s, String t) {
 public int[] maxSlidingWindow(int[] nums, int k) {
     int[] result = new int[nums.length - k + 1];
     Deque<Integer> window = new ArrayDeque<>();
+    
     int left = 0;
     for (int right = 0; right < nums.length; right++) {
         // Maintain decreasing order
@@ -532,6 +598,7 @@ public int[] maxSlidingWindow(int[] nums, int k) {
             window.removeLast();
         }
         window.addLast(right);
+        
         // Remove element that are outside window
         if (left > window.getFirst()) {
             window.removeFirst();
@@ -543,34 +610,6 @@ public int[] maxSlidingWindow(int[] nums, int k) {
         }
     }
     return result;
-}
-```
-
-----
-
-## [↑](#home) <a id="nearby"></a> Nearby Duplicate
-Есть усложнённая версия поиска дубликатов: **"[219. Contains Duplicate II](https://leetcode.com/problems/contains-duplicate-ii/)"**.
-Необходимо найти не просто дубликат, а ближайший дубликат в определённом диапазоне длинной k.
-
-Нужно смотреть на дубликаты только в определённом диапазоне, т.е. нужно рассматривать только некоторую ограниченную область.\
-Такую область называют "окном", а название подхода - **"[Window Sliding](https://www.geeksforgeeks.org/window-sliding-technique/)"**.
-
-![](../img/window/NearbyDuplicate.png)
-
-Как видно, мы анализируем на 1 элемент больше, чем размер окна. При этом перед следующим заходом мы должны компенсировать это различие:
-```java
-public boolean containsNearbyDuplicate(int[] nums, int k) {
-    Set<Integer> seen = new HashSet<>();
-    // It's important for us to know about current index (i.e. current position)
-    for (int i = 0; i < nums.length; i++) {
-        if (!seen.add(nums[i])) {
-            return true;
-        }
-        // Maintain window size. Remove element by value of element that is
-        // For [1,2,3,4,5] and k=3 after addition of 4 we should remove inxed 3-3=0
-        if (seen.size() > k) seen.remove(nums[i-k]);
-    }
-    return false;
 }
 ```
 
@@ -623,3 +662,33 @@ class Solution {
 Это решение наиболее интересное и интуитивно понятное. Существует решение на основе bucket'ов, но оно сложнее и больше шанс допустить ошибки. Подробнее см. stackoverflow: **"[Contains Duplicate III](https://stackoverflow.com/questions/31119971/leetcode-contains-duplicate-iii/48317895)"**.
 
 Видео разбор от Fisher Coder: [LeetCode 220: Contains Duplicate III ](https://www.youtube.com/watch?v=Cu7g9ovYHNI&t=286s).
+
+----
+
+## [↑](#home) <a id="frequency"></a> 1838. Frequency of the Most Frequent Element
+Разберём задачу [Frequency of the Most Frequent Element](https://leetcode.com/problems/frequency-of-the-most-frequent-element/).\
+Разбор можно посмотреть тут: [Frequency of the Most Frequent Element - Sliding Window](https://www.youtube.com/watch?v=vgBrQ0NM5vE).
+
+![](../img/window/MostFrequentElement.png)
+
+Код решения:
+```java
+public int maxFrequency(int[] nums, int k) {
+    Arrays.sort(nums); // Put values in order
+    int left = 0, right = 0; // Set pointers
+    int result = 0;
+    long total = 0;
+    while (right < nums.length) {
+        total = total + nums[right];
+        int filling = nums[right] * (right - left + 1);
+        // Shift left pointer while we "out of budget k"
+        while (filling > total + k && left <= right) {
+            total = total - nums[left]; // Remove left pointer from total
+            left++; // Shrink window
+        }
+        result = Math.max(result, right - left + 1); // Remember max window size
+        right++; // Move right pointer further
+    }
+    return result;
+}
+```

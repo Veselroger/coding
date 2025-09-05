@@ -4,13 +4,62 @@
 Задачи на LeetCode: **"[Prefix Sum](https://leetcode.com/problem-list/prefix-sum/)"**.
 
 **Table of Contents:**
+- [[303] Range Sum Query - Immutable](#range)
 - [[724] Find pivot index](#pivot)
+- [[1991] Find the Middle Index in Array](#middle)
+- [[2574] Left and Right Sum Differences](#sumDiff)
 - [[238] Product of Array Except Self](#productarray)
 - [[268] Missing number](#missing)
 - [[53] Maximum Subarray](#subarray)
 - [[2016] Maximum Difference Between Increasing Elements](#maximum)
 - [[560] Subarray Sum Equals K](#subarraySum)
 - [[1422] Maximum Score After Splitting a String](#maxScore)
+
+----
+
+## [↑](#home) <a id="range"></a> 303. Range Sum Query - Immutable
+Задача **"[303. Range Sum Query - Immutable](https://leetcode.com/problems/range-sum-query-immutable/description/?envType=problem-list-v2&envId=prefix-sum)"**:
+> Дан массив. Нужно написать метод, который возвращает сумму элементов из массива между указанными индексами (включительно).
+
+Данная задача показательна для понимания шаблона **Prefix Summ**.\
+Нам нужно сформировать массив, в котором будем хранить **prefix sum**:
+
+![](../../img/arrays/prefix/Sum.png)
+
+Для рассчёта массива для **prefix sum** можно написать метод:
+```java
+private int[] calculatePrefix(int[] nums) {
+    int[] result = new int[nums.length];
+    result[0] = nums[0];
+    for (int i = 1; i < nums.length; i++) {
+        result[i] = result[i-1] + nums[i];
+    }
+    return result;
+}
+```
+
+Тогда, для решения задачи нам остаётся лишь сделать следующее:\
+взять префикс ``R`` (сумма всех элементов включая R) и вычесть префикс ``L-1`` (сумму всех элементов ДО L).
+
+Однако, нужно учесть вариант, что L может быть 0, а значит нас интересует полный префикс R.
+
+Разбор от NeetCode: **"[Range Sum Query Immutable ](https://www.youtube.com/watch?v=2pndAmo_sMA)"**.
+
+<details><summary>Решение</summary>
+
+```java
+private int[] prefix;
+
+public NumArray(int[] nums) {
+    prefix = calculatePrefix(nums);
+}
+    
+public int sumRange(int left, int right) {
+    if (left == 0) return prefix[right];
+    return prefix[right] - prefix[left - 1];
+}
+```
+</details>
 
 ----
 
@@ -52,6 +101,53 @@ public int pivotIndex(int[] nums) {
 }
 ```
 </details>
+
+----
+
+## [↑](#home) <a id="middle"></a> 1991. Find the Middle Index in Array
+Разберём задачу **"[1991. Find the Middle Index in Array](https://leetcode.com/problems/find-the-middle-index-in-array/description)"**:
+> Дан массив чисел. Нужно найти индекс, слева и справа от которого будет одинаковая сумма.
+
+```java
+public int findMiddleIndex(int[] nums) {
+    int[] prefix = new int[nums.length];
+    for (int i = 0; i < prefix.length; i++) {
+        int pref = (i == 0) ? 0 : prefix[i-1]; 
+        prefix[i] = pref + nums[i];
+    }
+
+    for (int i = 0; i < prefix.length; i++) {
+        int left = (i == 0) ? 0 : prefix[i-1]; 
+        int right = prefix[prefix.length-1] - left - nums[i];
+        if (left == right) return i;
+    }
+    return -1;
+}
+```
+
+----
+
+## [↑](#home) <a id="sumDiff"></a> 2574. Left and Right Sum Differences
+Разберём задачу **"[2574. Left and Right Sum Differences](https://leetcode.com/problems/left-and-right-sum-differences/description)"**:
+> Дан массив чисел. Нужно вернуть массив, где для каждого индекса посчитана разница между суммами слева и справа для каждого индекса.
+
+```java
+    public int[] leftRightDifference(int[] nums) {
+    int[] result = new int[nums.length];
+    int prefix = 0;
+    for (int i = 0; i < nums.length; i++) {
+        result[i] = prefix;
+        prefix = prefix + nums[i];
+    }
+
+    prefix = 0;
+    for (int i = nums.length - 1; i >= 0; i--) {
+        result[i] = Math.abs(result[i] - prefix);
+        prefix = prefix + nums[i];
+    }
+    return result;
+}
+```
 
 ----
 

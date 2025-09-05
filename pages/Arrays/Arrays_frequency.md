@@ -11,6 +11,7 @@
 - [[451] Sort Characters By Frequency](#sortcharacters) 
 - [[1647] Minimum Deletions to Make Character Frequencies Unique](#mindelete)
 - [[350] Intersection of Two Arrays II](#intersection)
+- [[389] Find the Difference](#diff)
 
 ----
 
@@ -316,4 +317,36 @@ public int[] intersect(int[] nums1, int[] nums2) {
 }
 ```
 </details>
+
+----
+
+## [↑](#home) <a id="diff"></a> 389. Find the Difference
+
+Рассмотрим задачу **"[389. Find the Difference](https://leetcode.com/problems/find-the-difference/?envType=problem-list-v2&envId=hash-table)"**:
+> Даны две строки. Вторая строка сформирована из перемешанных символов первой, но с добавлением доп символа. Нужно его найти.
+
+Сформировав Frequency Map мы можем по ней идти и вычитать количество известных повторов.\
+Как только мы найдём символ, количество повторов для которого станет отрицательным - это наш ответ.
+
+Например, ``aaa`` сформирует 3 повтора. Если мы встретим ``аааа``, тогда получится ``3-4=-1``.\
+Если же символа не было, то мы сразу получим отрицательное значение и найдём ответ.
+
+<details><summary>Решение</summary>
+
+```java
+public char findTheDifference(String s, String t) {
+    Map<Character, Integer> map = new HashMap<>();
+    for (char chr : s.toCharArray()) map.put(chr, map.getOrDefault(chr, 0) + 1);
+
+    for (char chr : t.toCharArray()) {
+        map.put(chr, map.getOrDefault(chr, 0) - 1);
+        if (map.get(chr) < 0) return chr;
+    }
+    return ' ';
+}
+```
+</details>
+
+----
+
 

@@ -1,6 +1,6 @@
 # [←](../../README.md) <a id="home"></a> Arrays: hashing
 
-Данный раздел посвящён задачам на массивы и **хэширование**.\
+Данный раздел посвящён задачам на массивы и **кэширование**.\
 Задачи на LeetCode: **"[Hash Table](https://leetcode.com/problem-list/hash-table/)"**.
 
 **Table of Contents:**
@@ -13,20 +13,22 @@
 - [[454] Four Sum II](#foursum)
 - [[205] Isomorphic Strings](#isomorphic)
 - [[290] Word Pattern](#pattern)
+- [[448] Find All Numbers Disappeared in an Array](#disappeared)
+- [[387] First Unique Character in a String](firstUnique)
+- [[409] Longest Palindrome](#pattern)
 
 ----
 
 ## [↑](#home) <a id="duplicate"></a> 217. Contains Duplicate
-Рассмотрим задачу **"[217. Contains duplicate](https://leetcode.com/problems/contains-duplicate/)"**:
+Рассмотрим задачу **"[217. Contains duplicate](https://leetcode.com/problems/contains-duplicate/description/?envType=problem-list-v2&envId=hash-table)"**:
 > Проверить массив целых чисел на наличие дубликатов (элементы повторяются как минимум дважды). 
 
-Разбор задачи от **NeetCode**: **"[Contains Duplicate](https://www.youtube.com/watch?v=3OamzN90kPg)"**.
-
-Базовая задача на применение структуры **Set** и подхода хэширования:
+Это базовая задача на применение структуры **Set** и подхода кэширования.\
+Ищем дубликаты, т.е. элементы, которые мы уже ранее видели (**seen**):
 
 ![](../../img/arrays/hash/Contains-duplicate.gif)
 
-Рассматривая каждый элемент нужно понять, дубликат ли это. Дубликат == такой элемент мы уже видели.
+Разбор задачи от **NeetCode**: **"[Contains Duplicate](https://www.youtube.com/watch?v=3OamzN90kPg)"**.
 
 <details><summary>Решение</summary>
 
@@ -44,18 +46,21 @@ public boolean containsDuplicate(int[] nums) {
 ----
 
 ## [↑](#home) <a id="twosum"></a> 1. Two sum
-Разберём задачу **"[1. Two sum](https://leetcode.com/problems/two-sum/)"**:
+Разберём задачу **"[1. Two sum](https://leetcode.com/problems/two-sum/description/?envType=problem-list-v2&envId=hash-table)"**:
 > Дан массив целых чисел и число target. Вернуть индексы двух элементов дающих в сумме target.
 
-Разбор задачи от **NeetCode**: **"[Two Sum - Leetcode](https://www.youtube.com/watch?v=KLlXCFG5TnA)"**.
-
 Данная задача похожа на задачу **"[Contains duplicate](#duplicate)"**.\
-Для каждого элемента мы проверяем, видели ли ранее число, которое в сумме с текущим даёт target.\
-То есть рассматривая элемент ``A``, мы ищем в кэше ``B``, т.к. ``A + B = Target``, а ``Target - B = A``.
+Она основана на том, что любое **target** число состоит из пары чисел, сумма которых даёт **target**.
+
+Когда мы смотрим на элемент, мы проверяем, а не видели ли мы ранее (**seen**) другое число из пары.\
+То есть смотря на элемент ``A``, мы проверяем в кэше ``B``, т.к. ``A + B = Target``, а ``Target - B = A``.
+
+Однако, придётся использовать структуру **Hash Map**, т.к. нам нужно ещё и помнить индексы:
 
 ![](../../img/arrays/hash/TwoSum.gif)
 
-Кроме того, нам понадобится Map, т.к. нам нужно ещё и помнить индексы:
+Разбор задачи от **NeetCode**: **"[Two Sum - Leetcode](https://www.youtube.com/watch?v=KLlXCFG5TnA)"**.
+
 <details><summary>Решение</summary>
 
 ```java
@@ -81,14 +86,15 @@ public int[] twoSum(int[] nums, int target) {
 > Дан возрастающий массив чисел и значение diff. 
 Нужно найти количество уникальных триплетов: троек из чисел, которые отличаются друг от друга на значение diff.
 
-Как понять смотря на число, что мы нашли нужный триплет?\
+Решение данной задачи тоже про уже увиденные (**seen**) элементы, т.е. похоже на **"[Two sum](#twosum)"**.\
+Если там было **target - element = seen**, то здесь **seen1 = element - diff** и **seen2 = element - diff*2**. 
+
+Таким образом, главное ответить на вопрос: "что такое триплет для некоторого числа A?".\
 Смотря на число ``A``, мы должны были ранее видеть ``A - diff`` и ``A - diffx2``.
-Таким образом решение данной задачи очень похоже на решение задачи **"[Two sum](#twosum)"**.
 
 Визуализируем пример ``[0,1,4,6,7,10]`` для ``diff = 3``. Существует два триплета:
 
 ![](../../img/arrays/hash/Triplets.gif)
-
 
 <details><summary>Решение</summary>
 
@@ -113,14 +119,12 @@ public int arithmeticTriplets(int[] nums, int diff) {
 Рассмотрим задачу **"[128. Longest Consecutive Sequence](https://leetcode.com/problems/longest-consecutive-sequence/)"**:
 > Дан несортированный массив чисел. Нужно получить длину самой длинной последовательности чисел в нём. Например, для [100,4,200,1,3,2] последовательностью будет [1, 2, 3, 4] и ответ будет 4.
 
-Разбор задачи от **NeetCode**: **"[Longest Consecutive Sequence](https://www.youtube.com/watch?v=P6RZZMu_maU)"**.
+Данная задача добавляет ограничение: ``You must write an algorithm that runs in O(n) time.``.\
+Таким образом, любая сортировка нарушит данное ограничение.
 
-Чтобы решить задачу нужно ответить на вопрос: Что такое последовательность?\
-Последовательность, это когда у числа есть число+1, число+2 и так далее.
+Данная задача решается так же при помощи **кэша**.\
+Как найти последовательность? Нужно найти элемент, предыдущий элемент перед которым мы **НЕ** видели (опять про **seen**).
 
-![](../../img/arrays/hash/Sequence.png)
-
-Нам, как всегда, понадобится некоторый кэш, по которому можно быстро искать:
 ```java
 private Set<Integer> toCache(int[] nums) {
     Set<Integer> set = new HashSet<>();
@@ -131,9 +135,14 @@ private Set<Integer> toCache(int[] nums) {
 }
 ```
 
-Теперь при помощи нашего "кэша" будем искать самую длинную последовательность.\
-Чтобы найти последовательность нужно найти её начало.\
-Начало последовательности - элемент, который не имеет предыдущего элемента в кэше.
+Используя кэш можно за линейное время проходить по элементам.\
+Если мы НЕ видели в кэше элемента на 1 меньше текущего - мы нашли начало последовательности.\
+Так же это значит, что можно из кэша восстановить последовательность, прибавляя каждый раз единицу к значению.\
+Как только мы не находим элемент в кэше - последовательность прервалась.
+
+![](../../img/arrays/hash/Sequence.png)
+
+Разбор задачи от **NeetCode**: **"[Longest Consecutive Sequence](https://www.youtube.com/watch?v=P6RZZMu_maU)"**.
 
 <details><summary>Решение</summary>
 
@@ -156,20 +165,20 @@ public int longestConsecutive(int[] nums) {
 ```
 </details>
 
-Можно заметить, что решение напоминает задачу [Number of Arithmetic Triplets](#triplets).
-
 ----
 
 ## [↑](#home) <a id="intersection"></a> 349. Intersection of Two Arrays
 Разберём задачу **"[349. Intersection of Two Arrays](https://leetcode.com/problems/intersection-of-two-arrays/)"**:
 > Дано два массива. Вернуть массив из уникальных элементов, которые встречаются в обоих массивах
 
-Разбор задачи от NeetCode: **"[Intersection of Two Arrays - Leetcode 349](https://www.youtube.com/watch?v=fwUTXaMom6U)"**.
-
-Данная задача тоже решается при помощи кэша, по которому можно искать совпадения.\
-Главное - при нахождении элемента удалять его из кэша, чтобы не выводить дубликаты.
+Данная задача тоже про то, видели ли мы ранее (**seen**) элементы из одного массива в другом массиве.\
+Таким образом данная задача тоже решается при помощи кэша, по которому можно искать совпадения.
 
 ![](../../img/arrays/hash/Intersection.gif)
+
+Нужно **НЕ** забывать удалять из кэша уже обработанные элементы, иначе получим дубликаты!
+
+Разбор задачи от NeetCode: **"[Intersection of Two Arrays - Leetcode 349](https://www.youtube.com/watch?v=fwUTXaMom6U)"**.
 
 <details><summary>Решение</summary>
 
@@ -224,19 +233,13 @@ public int minimumOperations(int[] nums) {
 Разберём задачу **"[454. Four Sum II](https://leetcode.com/problems/4sum-ii)"**:
 > Даны 4 массива. Нужно вернуть КОЛИЧЕСТВО четвёрок из их элементов, чтобы сумма значений равнялась нулю.
 
-Разбор задачи от **Orkhan Gasanov**: [LeetCode - 4Sum II | Hash Table](https://www.youtube.com/watch?v=I41LpyxIdE0).
+Данная задача звучит сложно. А если задача сложная, то стоит попробовать разбить на подзадачи.\
+Для суммы нужно как минимум 2 элемента, а значит можно разбить задачу на 2 подзадачи.
 
-Данная задача просто на реализацию, но нужно выделить несколько требований, которые помогут понять, как решать:
-- Нужно посчитать количество
-- Чётное количество элементов, можно разбить на пары
-
-Для решения нам понадобится разделить четвёрку на две пары. Сначала посчитаем на одной из половин, какие суммы и сколькими способами получаются.\
-Далее, используя другую часть посчитаем финальное количество.
-
-<details><summary>Решение</summary>
-
+По условию задачи нам важно **количество** и **сумма**.\
+Таким образом, наша первая задача для первой двойки массивов определить, какие есть суммы двоек и сколько способов их получить:
 ```java
-public int fourSumCount(int[] nums1, int[] nums2, int[] nums3, int[] nums4) {
+public Map<Integer, Integer> getVariants(int[] nums1, int[] nums2) {
     Map<Integer, Integer> variants = new HashMap<>();
     for (int num1 : nums1) {
         for (int num2 : nums2) {
@@ -244,6 +247,26 @@ public int fourSumCount(int[] nums1, int[] nums2, int[] nums3, int[] nums4) {
             variants.put(sum, variants.getOrDefault(sum, 0) + 1);
         }
     }
+    return variants;
+}
+```
+
+Остаётся теперь написать основное решение.\
+Для него нужно рассмотреть остальные пары элементов.\
+Для начала, получаем их сумму **sum**.\
+Чтобы вышел ноль, нужно, чтобы мы уже видели (**seen**) ранее ``-sum``, т.к. ``sum - sum = 0``.
+
+Если в первой двойке нашли сумму, которая с суммой во второй двойке даёт ноль, значит нашли вариант.\
+Мы знаем, сколько способов получить сумму в первой двойке.\
+А значит, мы к ней можем прибавить найденные варианты из второй двойки. 
+
+Разбор задачи от **Orkhan Gasanov**: [LeetCode - 4Sum II | Hash Table](https://www.youtube.com/watch?v=I41LpyxIdE0).
+
+<details><summary>Решение</summary>
+
+```java
+public int fourSumCount(int[] nums1, int[] nums2, int[] nums3, int[] nums4) {
+    Map<Integer, Integer> variants = getVariants(nums1, nums2);
 
     int count = 0;
     for (int num3 : nums3) {
@@ -281,8 +304,10 @@ public boolean isIsomorphic(String s, String t) {
     for (int i = 0; i < s.length(); i++) {
         Character left = s.charAt(i);
         Character right = t.charAt(i);
-        //put returns the previous value associated with key, or null 
-        Character prev = first.put(left, right);
+
+        Character prev = null;
+        //put returns the previous value associated with key, or null
+        prev = first.put(left, right);
         if (prev != null && prev != right) return false;
         prev = second.put(right, left);
         if (prev != null && prev != left) return false;
@@ -296,11 +321,13 @@ public boolean isIsomorphic(String s, String t) {
 
 ## [↑](#home) <a id="pattern"></a> 290. Word Pattern
 Разберём задачу **"[290. Word Pattern](https://leetcode.com/problems/word-pattern/)"**:
-> Дана строка с шаблоном вида abba и строка со словами. Нужно решить, соответствует ли строка с шаблоном строке со словами. Например, если одна и та же буква повторяется, то и слово должно повторяться. Порядок в шаблоне и в строке со словами должны совпадать.
+> Дана строка с шаблоном вида "abba" и строка со словами вида "dog cat cat dog". Нужно решить, соответствует ли строка с шаблоном строке со словами. Например, если одна и та же буква повторяется, то и слово должно повторяться. Порядок в шаблоне и в строке со словами должны совпадать.
+
+Данная задача очень похожа на предыдщую задачу **"[Isomorphic Strings](#isomorphic)"**.\
+Разница лишь в том, что конкретно мы соотносим. В данном случае, это будет не символ - символ, а символ - слово.\
+Так как мы берём пары последовательно, то порядок будет соблюдён.
 
 Разбор задачи от NeetCode: **"[Word Pattern - Leetcode 290](https://www.youtube.com/watch?v=W_akoecmCbM)"**.
-
-Данная задача очень похожа на предыдщую задачу **"[Isomorphic Strings](#isomorphic)"**. Разница лишь в том, что конкретно мы соотносим. В данном случае, это будет не символ - символ, а символ - слово.
 
 <details><summary>Решение</summary>
 
@@ -308,6 +335,7 @@ public boolean isIsomorphic(String s, String t) {
 public boolean wordPattern(String pattern, String s) {
     String[] words = s.split(" ");
     if (words.length != pattern.length()) return false;
+
     HashMap<Character, String> patToWord = new HashMap<>();
     HashMap<String, Character> wordToPat = new HashMap<>();
     for (int i = 0; i < pattern.length(); i++) {
@@ -325,3 +353,101 @@ public boolean wordPattern(String pattern, String s) {
 </details>
 
 ----
+
+## [↑](#home) <a id="disappeared"></a> 448. Find All Numbers Disappeared in an Array
+Рассмотрим задачу **"[448. Find All Numbers Disappeared in an Array](https://leetcode.com/problems/find-all-numbers-disappeared-in-an-array)"**:
+> Дан массив из n чисел. В данном массиве числа могут быть в диапазоне от 1 до n. Определить, какие числа из диапазона пропущены.
+
+Например, для ``[4,3,2,7,8,2,3,1]`` ответом будет ``[5,6]``, т.к. массив длиной в 8 элементов (``n=8``).\
+Задача опять про то, какие элементы мы ранее видели (**seen**):
+```java
+Set<Integer> seen = new HashSet<>();
+for (int num : nums) seen.add(num);
+```
+
+Дальше лишь остаётся создать список ответов.\
+Для чисел в диапазоне от 1 до n проверяем, видели ли мы их в массиве или нет.
+
+<details><summary>Решение</summary>
+
+```java
+public List<Integer> findDisappearedNumbers(int[] nums) {
+    Set<Integer> seen = new HashSet<>();
+    for (int num : nums) seen.add(num);
+
+    List<Integer> result = new ArrayList<>();
+    for (int i = 1; i <= nums.length; i++) {
+        if (!seen.contains(i)) result.add(i);
+    }
+    return result;
+}
+```
+</details>
+
+----
+
+## [↑](#home) <a id="firstUnique"></a> 387. First Unique Character in a String
+Рассмотрим задачу **"[387. First Unique Character in a String](https://leetcode.com/problems/first-unique-character-in-a-string)"**:
+> Дана строка. Нужно в ней найти первый уникальный символ.
+
+Данная задача тоже про то, что сначала мы считаем, сколько раз мы увидели каждый символ (**seen**).\
+На втором проходе проверяем для каждого индекса слева направо, а не уникальный ли это символ.
+
+Разбор задачи от NeetCode: **[First Unique Character in a String](https://www.youtube.com/watch?v=rBENYgWy3xU)**.
+
+<details><summary>Решение</summary>
+
+```java
+public int firstUniqChar(String s) {
+    Map<Character, Integer> seen = new HashMap<>();
+    for (char chr : s.toCharArray()) {
+        seen.put(chr, seen.getOrDefault(chr, 0) + 1);
+    }
+    for (int ind = 0; ind < s.length(); ind++) {
+        if (seen.get(s.charAt(ind)) == 1) return ind;
+    }
+    return -1;
+}
+```
+</details>
+
+Есть аналогичная задача **[169. Majority Element](https://neetcode.io/problems/majority-element)**, которая отличается лишь тем, по какому условию нужно вернуть результат.
+
+----
+
+## [↑](#home) <a id="pattern"></a> 409. Longest Palindrome
+Разберём задачу **"[409. Longest Palindrome](https://leetcode.com/problems/longest-palindrome/?envType=problem-list-v2&envId=hash-table)"**:
+> Дана строка. Нужно из её символов составить самый длинный палиндром с учётом регистра.
+
+Основная идея: у каждого символа есть **пара** для чётного кол-ва символов или +1 символ для нечётного.\
+**пара** - это когда мы ранее уже **seen** такой элемент.\
+Получается, можно использовать HashSet для решения. Будем считать пары и потом добавим +1, если надо.
+
+Разбор задачи от NeetCode: **[Longest Palindrome - Leetcode 409](https://www.youtube.com/watch?v=_g9jrLuAphs)**.
+
+<details><summary>Решение</summary>
+
+```java
+public int longestPalindrome(String s) {
+    HashSet<Character> seen = new HashSet<>();
+    int length = 0;
+    
+    for (char c : s.toCharArray()) {
+        if (seen.contains(c)) {
+            seen.remove(c);
+            length += 2; // new pair
+        } else {
+            seen.add(c);
+        }
+    }
+
+    if (!seen.isEmpty()) length += 1;
+
+    return length;    
+}
+```
+</details>
+
+----
+
+

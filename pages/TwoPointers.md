@@ -19,6 +19,8 @@
 - [[713] Subarray Product Less Than K](#lessthanK)
 - [[287] Find the duplicate number](#duplicateNumber)
 - [[18] Four sum](#sum4)
+- [[121] Best Time to Buy And Sell Stock](#bestTime)
+- [[2148] Count Elements With Strictly Smaller and Greater Elements](#countElements)
 
 ----
 
@@ -30,6 +32,8 @@
 Разбор задачи от NeetCode: **"[Move Zeroes - Leetcode](https://www.youtube.com/watch?v=aayNRwUN3Do)"**.
 
 Отличная задача как введение в **"Two Pointers"** задачи.\
+Нас интересует два указателя: куда перемещать **НЕ нули** и откуда перемещать.
+
 Хочется пробегаться указателем слева, а помещать по указателю справа, который указывает на конец списка\
 Это не будет работать, т.к. нам важен порядок. А раз нам важен порядок, будем двигать **left** и **right** вместе, начиная с начала.
 
@@ -67,8 +71,9 @@ public void moveZeroes(int[] nums) {
 
 Тоже интересная задача на два указателя. Разбор от NeetCode: **[Squares of a Sorted Array](https://www.youtube.com/watch?v=FPCZsG_AkUg)**.
 
-Важно уделить внимание тому, что массив отсортирован. Это значит, что самые минимальные значения будут слева, а максимальны справа.\
-Однако, слева может быть такое отрицательное число, квадрат которого будет больше, чем самое правое число.\
+Важно уделить внимание тому, что массив отсортирован. Это значит, что самые минимальные значения будут слева, а максимальны справа.
+
+Однако, слева может быть отрицательное число, квадрат которого будет больше, чем самое правое число.\
 Получается, нам нужно смотреть сразу в два места, левый край и правый край и сдвигать диапазон. То есть задача на два указателя.
 
 Заполняем результат справа налево, т.к. будет двигаться от наибольшего числа к наименьшему.\
@@ -620,3 +625,108 @@ public List<List<Integer>> fourSum(int[] nums, int target) {
     return result;
 }
 ```
+
+----
+
+## [↑](#home) <a id="bestTime"></a> 121. Best Time to Buy And Sell Stock
+Рассмотрим задачу "[121. Best Time to Buy And Sell Stock](https://leetcode.com/problems/best-time-to-buy-and-sell-stock/)":
+> Дан массив, где каждый элемент - это цена на конкретный день. Нужно найти максимальную выгоду от покупки в один день и продажи в другой.
+
+Разбор задачи от NeetCode: [Best Time to Buy and Sell Stock](https://www.youtube.com/watch?v=1pkOgXD63yU).\
+Разбор задачи от Сергея Пузанковым: [Лучшее время для покупки акций](https://www.youtube.com/watch?v=wm8hhQyIR9o).
+
+Начнём, как обычно, с визуализации примера с LeetCode:
+
+![](../img/pointers/BestTime.png)
+
+Когда выгодно купить, если мы можем купить всего один раз? Когда цена минимальная.\
+Когда выгодно продать, если мы можем продать всего один раз? Когда цена максимальна.
+
+Получаем два указателя (и **two pointers** задачу): L (left, покупка) и R (right, продажа).\
+Если покупка (L) меньше продажи (R): считаем выгоду (profit) и запоминаем максимальный профит на текущий момент.\
+Если покупка (L) больше продажи (R): найден новый самый минимальный элемент.
+
+Тогда, решение будет выглядеть следующим образом:
+
+![](../img/pointers/BestTime.gif)
+
+<details><summary>Решение</summary>
+
+```java
+public int maxProfit(int[] prices) {
+    int maxProfit = 0;
+    int l = 0, r = 1;
+    while (r < prices.length) {
+        if (prices[l] < prices[r]) {
+            int profit = prices[r] - prices[l];
+            maxProfit = Math.max(maxProfit, profit);
+        } else {
+            l = r;
+        }
+        r++;
+    }
+    return maxProfit;
+}
+```
+</details>
+
+Ту же задачу можно решить немного по-другому, не через указатели, а манипулируя только понятиями "минимальный элемент" (ограничивает зону элементов, которые мы рассматриваем) и "максимальная выгода":
+```java
+public int maxProfit(int[] prices) {
+    int maxProfit = 0;
+    int minElement = prices[0];
+
+    for (int price : prices) {
+        // Profit is when price bigger than min element
+        maxProfit = Math.max(maxProfit, price - minElement);
+        minElement = Math.min(minElement, price);
+    }
+    return maxProfit;
+}
+```
+
+----
+
+## [↑](#home) <a id="bestTime2"></a> 122. Best Time to Buy and Sell Stock II
+Разберём задачу **"[122. Best Time to Buy and Sell Stock II](https://leetcode.com/problems/best-time-to-buy-and-sell-stock-ii)"**.\
+В отличии от первой части задачи, теперь мы можем иметь несколько транзакций (т.е. пар купил-продал).
+
+Важно увидеть, что если у нас есть последовательность вроде [1,7,3,5], то если у нас есть несколько транзакций, то всегда выгоднее купить тогда, когда дальше следует рост, т.е. el[i] < el[i+1], а продать тогда, когда дальше следует падение el[i] > el[i+1]. Может захотеть запоминать крайние состояния, но если мы будем просто добавлять к профиту каждый кусочек, то нам не нужно даже ничего запоминать.
+
+```java
+public int maxProfit(int[] prices) {
+    int profit = 0;
+    for (int i = 1; i < prices.length; i++) {
+        if (prices[i] > prices[i-1]) {
+            profit = profit + (prices[i] - prices[i-1]);
+        }
+    }
+    return profit;
+}
+```
+
+----
+
+## [↑](#home) <a id="countElements"></a> 2148. Count Elements With Strictly Smaller and Greater Elements
+Разберём ещё одну вариацию задачи: [2148. Count Elements With Strictly Smaller and Greater Elements](https://leetcode.com/problems/count-elements-with-strictly-smaller-and-greater-elements/)
+
+```java
+public int countElements(int[] nums) {
+    int cnt = 0;
+    int max = nums[0];
+    int min = nums[0];
+    for (int i = 1; i < nums.length; i++) {
+        if (nums[i] > max) {
+            max = nums[i];
+        } else if (nums[i] < min) {
+            min = nums[i];
+        }
+    }
+    for (int i = 0; i < nums.length; i++) {
+        if (nums[i] < max && nums[i] > min) cnt++;
+    }
+    return cnt;
+}
+```
+
+----

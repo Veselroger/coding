@@ -2,11 +2,14 @@
 
 Данный конспект посвящён шаблонам решения алгоритмических задач на примере **LeetCode**.\
 Будут рассматриваться задачи из **"[LeetCode Patterns](https://seanprashad.com/leetcode-patterns/)"**.\
-Кроме того, конспект опирается на **"[Road Map](https://neetcode.io/roadmap)"** от NeetCode.
+Кроме того, конспект опирается на **"[NeetCode Road Map](https://neetcode.io/roadmap)"** от NeetCode.
 
 Рекомендуется открыть репозиторий в **IntelliJ Idea** и использовать плагин **"[LeetCode Editor](https://plugins.jetbrains.com/plugin/12132-leetcode-editor)"**.\
-Через контекстное меню вкладок можно сделать **"Split Right"**, чтобы смотреть конспект и задачи одновременно.
+Через контекстное меню вкладок можно сделать **"Split Right"** (можно через **CTRL+SHIFT+A**), чтобы смотреть конспект и задачи одновременно.
 Так же рекомендуется поставить плагин **"[Excalidraw integration](https://plugins.jetbrains.com/plugin/17096-excalidraw-integration)"**.
+
+Если хочется открывать ссылки из IntelliJ IDEA то можно поставить плагин **"[GBrowser](https://plugins.jetbrains.com/plugin/14458-gbrowser)"**.\
+Тогда ``https://neetcode.io/roadmap`` можно будет открыть прямо в IDE.
 
 В качестве музыкального сопровождения можно использовать **[Abao in Tokyo](https://www.youtube.com/@abaointokyo/featured)** или **[Lo-Fi girl](https://www.youtube.com/c/lofigirl)**.\
 Или можно установить плагин **[Code Radio](https://plugins.jetbrains.com/plugin/21681-code-radio)**.
@@ -22,29 +25,29 @@
 ----
 
 **Темы:**
-- Arrays
+- **Arrays**
     - [Hashing](pages/Arrays/Arrays_hash.md)
+	- [Frequency map (counting)](pages/Arrays/Arrays_frequency.md)
     - [Prefix sum](pages/Arrays/Arrays_prefix.md)
-    - [Frequency map](pages/Arrays/Arrays_frequency.md)
     - [Binary Search](pages/Arrays/Arrays_binarysearch.md)
     - [Index Mapping](pages/Arrays/Arrays_indexMapping.md)
     - [Divide and Conquer](pages/Arrays/Arrays_divide.md)
     - [Arrays 2D](pages/Arrays/Arrays_2D.md)
 - [Two Pointers](pages/TwoPointers.md)
-- [Stack](pages/Stack.md)
-- [Binary Search Tree](pages/BinarySearchTree.md)
 - [Sliding Window](pages/SlidingWindow.md)
 - [Linked List](pages/LinkedLists.md)
-- [Trees](pages/Trees.md)
-- [Trie](pages/Trie.md)
+- [Stack](pages/Stack.md)
+- **Trees**
+    - [Binary Search Tree](pages/Trees/BST.md)
+    - [Breadth-First Search](pages/Trees/BFS.md)
+    - [Depth-First Search](pages/Trees/DFS.md)
+    - [Trie](pages/Trie.md)
 - [Heap](pages/Heap.md)
+- [Intervals](pages/Intervals.md)
 - [Greedy](pages/Greedy.md)
 - [Backtracking](pages/Backtracking.md)
+- [Dynamic programming](pages/Dynamic.md)
 
 **EASY**:
-- [Climbing Stairs](pages/ClimbingStairs.md)
 - [Other](pages/Other.md)
 - [Counting Bits](pages/CountingBits.md)
-- [Meeting Rooms](pages/MeetingRooms.md)
-- [Index Pairs of a String](pages/PairsIndex.md)
-- [Majority Element](pages/Majority.md)

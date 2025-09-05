@@ -1,98 +1,175 @@
-# <a id="home"></a> Backtracking
+# [←](../README.md) <a id="home"></a> Backtracking
 
 Данный раздел посвящён паттерну Backtracking из **[Leetcode Patterns](https://seanprashad.com/leetcode-patterns/)**.\
 У NeetCode есть плэйлист разборов на эту тему: **[Backtracking Playlist](https://www.youtube.com/watch?v=pfiQ_PS1g8E&list=PLot-Xpze53lf5C3HSjCnyFghlW0G1HHXo)**.
 
 **Table of Contents:**
-- [Subsets](#subsets)
-- [Subsets II](#subsets2)
-- [Combination Sum](#combination)
-- [Combination Sum II](#combination2)
-- [Permutations](#permutations)
-- [Permutations II](#permutations2)
-- [Word Search](#wordSearch)
-- [Letter Case Permutation](#casePermutation)
-
+- [[257] Binary Tree Paths](#bintreepaths)
+- [[784] Letter Case Permutation](#casePermutation)
+- [[17] Letter Combinations of a Phone Number](#lettercomb)
+- [[39] Combination Sum](#combination)
+- [[40] Combination Sum II](#combination2)
+- [[78] Subsets](#subsets)
+- [[90] Subsets II](#subsets2)
+- [[46] Permutations](#permutations)
+- [[47] Permutations II](#permutations2)
+- [[79] Word Search](#wordSearch)
+- [[51] N-Queens](#N-Queens)
+- [[131] Palindrome partitioning](#palindrome)
 
 ----
 
-## [↑](#home) <a id="subsets"></a> Subsets
-Рассмотрим задачу [Subsets](https://leetcode.com/problems/subsets/):
-> Дан массив уникальных элементов. Нужно найти все подмассивы.
+## [↑](#home) <a id="bintreepaths"></a> 257. Binary Tree Paths
+Рассмотрим самую простую для понимания задачу **"[257. Binary Tree Paths](https://leetcode.com/problems/binary-tree-paths)"**:
+> Дан корневой элемент дерева. Нужно вернуть все пути от корня до листового узла дерева.
 
-Данная задача про Subsets. От **permutations** она отличается тем, что [1,2] это тоже самое, что [2,1] и таких повторений быть не должно.
+Разбор задачи от Nick White: **"[Binary Tree Paths - Backtracking](https://www.youtube.com/watch?v=H2D4HcVZq_g)"**.
 
-Понять задачу нам снова поможет NeetCode: [Subsets - Backtracking](https://www.youtube.com/watch?v=REOH22Xwdkk).
+Решение данной задачи строится на **Depth-first search (DFS)**, он же "обход в глубину": 
 
-![](../img/backtracking/subsets.png)
-
-Для решения данной задачи нам пригодится **DFS** подход, он же поиск в глубину.\
-Каждый "спуск в глубину" - это принятие решение для очередного индекса. Тогда:
 ```java
-public List<List<Integer>> subsets(int[] nums) {    
-    List<List<Integer>> result = new ArrayList<>();
-    dfs(0, nums, result, new LinkedList<>());
+public List<String> binaryTreePaths(TreeNode root) {
+    List<String> result = new ArrayList();
+    dfs(root, new LinkedList<String>(), result);
     return result;
 }
 ```
 
-Самы же dfs тогда будет выглядеть так:
+На каждом шаге у нас есть некоторая **TreeNode**.\
+Для начала ноду добавляем в текущий путь (**path**). Мы хотим в конце этого пути то добавлять, то удалять элементы. Можно для этого использовать связанный список, он же LinkedList.
+
+Каждый шаг (т.е. каждый вызов dfs) нода добавляется в путь.\
+Дальше мы должны сделать выбор:
+- у ноды нет дочерних нод, мы нашли листовую ноду\
+Путь закончен, добавляем его "слепок" в список найденных путей. Т.к. путь найден, мы хотим найти другие пути, в них не должно быть текущей ноды. То есть ноду удаляем из пути
+- есть левая и/или правая нода\
+Выполняем новый шаг для каждой из дочерних нод. Когда выполнение выполнится, мы знаем, что мы обработали все пути, которые прошли через текущую ноду, а значит из пути её можно удалить. После этого выполнение метода завершается.
+
+Таким образом идея в том, что на каждом шаге мы можем выполнить два действия: пойти налево или пойти направо. Если идти некуда, то мы в листовом узле, а значит дошли до конца пути и должны этот путь занести в результаты.
+
+![](../img/backtracking/BinaryTreePaths.gif)
+
+<details><summary>Решение</summary>
+
 ```java
-public void dfs(int index, int[] nums, List<List<Integer>> result, LinkedList<Integer> subset) {
-    // Base case: out or array, all decisions were made
-    if (index >= nums.length) {
-        result.add(new ArrayList<Integer>(subset));
+private void dfs(TreeNode node, LinkedList<String> path, List<String> result) {
+    if (node == null) return; // Can't do anything without node
+    path.add(String.valueOf(node.val)); // Add current node to the path
+
+    // Current node is a leaf node: save path to result, remove node from the path
+    if (node.left == null && node.right == null) {
+        result.add(String.join("->",path));
+        path.removeLast();
         return;
     }
-    // Decision to include
-    subset.addLast(nums[index]);
-    dfs(index + 1, nums, result, subset);
-    // Decision to not include
-    subset.removeLast();
-    dfs(index + 1, nums, result, subset);
+
+    // Has children
+    if (node.left != null) dfs(node.left, path, result);
+    if (node.right != null) dfs(node.right, path, result);
+    
+    // This path was handled. Remove node from the path
+    path.removeLast();
 }
 ```
-Таким образом, рекурсивно мы продвигаемся по индексам.\
-Для каждого индекса dfs выполняет 2 ветвления: с добавляением nums[index] и без добавления.\
-А когда каждая ветвь заходит в тупик (т.е. выходит за пределы массива), мы добавляем результат.
+</details>
 
 ----
 
-## [↑](#home) <a id="subsets2"></a> Subsets II
-Рассмотрим задачу [Subsets II](https://leetcode.com/problems/subsets-ii/):
-> Дан массив элементов, где элементы могут повторяться. Нужно найти все подмассивы.
+## [↑](#home) <a id="casePermutation"></a> 784. Letter Case Permutation
+Рассмотрим задачу [784. Letter Case Permutation](https://leetcode.com/problems/letter-case-permutation/):
+> Дана строка s, в которой можно менять регистр каждому символу отдельно. Нужно вернуть список всех возможных вариаций строк с разными регистрами.
 
-Разбор от NeetCode: [Subsets II - Backtracking](https://www.youtube.com/watch?v=Vn2v6ajA7U0).
+Подход к решению можно посмотреть у Aleksandr Stepanenko: **[Решаем Литкод : Letter Case Permutation](https://www.youtube.com/watch?v=wYO4ospshr8)**.
 
-Во-первых, нам нужно как-то пропускать элементы со значением, которое мы уже видели. Например, можно отсортировать входной массив:
+Базовый случай: дошли до конца строки, а значит больше нечего делать и добавляем в результат составленную строку.
+
+Если не базовый случай: в случае цифры просто добавляем в путь цифру как есть. В случае буквы делаем развилку: одну с верхним регистром, одну с нижним.
+
+<details><summary>Решение</summary>
+
 ```java
-public List<List<Integer>> subsets(int[] nums) {    
-    Arrays.sort(nums);
+List<String> result = new ArrayList<>();
+public List<String> letterCasePermutation(String s) {
+    search(s, "", 0);
+    return result;
+}
+
+public void search(String s, String cur, int ind) {
+    // Basecase: the string end was reached
+    if (ind == s.length()) {
+        result.add(cur);
+        return;
+    }
+    if (Character.isDigit(s.charAt(ind))) {
+        search(s, cur + s.charAt(ind), ind+1);
+    } else {
+        search(s, cur + Character.toUpperCase(s.charAt(ind)), ind+1);
+        search(s, cur + Character.toLowerCase(s.charAt(ind)), ind+1);
+    }
+}
+```
+</details>
+
+----
+
+## [↑](#home) <a id="lettercomb"></a> 17. Letter Combinations of a Phone Number
+Рассмотрим задачу [17. Letter Combinations of a Phone Number](https://leetcode.com/problems/letter-combinations-of-a-phone-number/):
+> Дана строка из цифр (от 2 до 9), каждой цифре соответствует некоторый набор букв (как на кнопочном мобильном телефоне). Нужно получить все кобинации, которые можно получить при помощи указанных цифр.
+
+Разбор от NeetCode: "[Letter Combinations of a Phone Number - Backtracking](https://www.youtube.com/watch?v=0snEunUacZY)".
+
+Для начала нам нужно соответствие номеру кнопки и набора символов. Для этого можно обойтись обычным массивом строк:
+```java
+private String[] digitToChar = {
+    "", "", "abc", "def", "ghi", "jkl", "mno", "qprs", "tuv", "wxyz"
+};
 ```
 
-Далее, когда мы решаем не включать элемент и переходим к следующему элементу, нам нужно "прокрутить" элементы в том случае, если такой элемент только что обрабатывался, чтобы избежать дубли:
+Как обычно, основной метод выполняет backtracking:
 ```java
-// Decision to not include
-subset.removeLast();
-while (index + 1 < nums.length && nums[index] == nums[index + 1]) {
-    index++;
+public List<String> letterCombinations(String digits) {
+    List<String> res = new ArrayList<>();
+    if (digits.isEmpty()) return res;
+    // Start with empty string
+    backtrack(0, "", digits, res);
+    return res;  
 }
-dfs(index + 1, nums, result, subset);
+```
+
+Сам backtracking тоже по традиционной логике.\
+Базовый случай: составили строку той же длины, что и переданная последовательность нажатых цифр - закончили обработку, добавляем в результат.
+
+Основная логика: получаем из массива соответствий кнопкам букв доступные буквы. Запускаем отдельный backtrack для последовательностей, составленных из полученной на вход строки curStr **ПЛЮС** отдельной буквы с кнопки, не забывая сместить индекс в вызове backtrack.
+
+```java
+private void backtrack(int i, String curStr, String digits, List<String> res) {
+    // Base Case: Current string has the same length as digits count
+    if (curStr.length() == digits.length()) {
+        res.add(curStr);
+        return;
+    }
+
+    String chars = digitToChar[digits.charAt(i) - '0'];
+    // Build path with each letter
+    for (char c : chars.toCharArray()) {
+        backtrack(i + 1, curStr + c, digits, res);
+    }
+}
 ```
 
 ----
 
-## [↑](#home) <a id="combination"></a> Combination Sum
-Рассмотрим задачу [Combination Sum](https://leetcode.com/problems/combination-sum/):
-> Дан массив из чисел и некоторое target значение. Нужно вернуть уникальные способы получить суммой заданное target значение.
+## [↑](#home) <a id="combination"></a> 39. Combination Sum
+Рассмотрим задачу [39. Combination Sum](https://leetcode.com/problems/combination-sum/):
+> Дан массив из уникальных чисел и некоторое target значение. Нужно вернуть уникальные способы получить суммой заданное target значение. (!) Число может повторяться.
 
-Разбор от NeetCode: "[Combination Sum - Backtracking](https://www.youtube.com/watch?v=GBKI9VSKdGg)".\
+Данная задача похожа на задачу [Binary Tree Paths](#bintreepaths).\
+Вместо ноды TreeNode у нас есть массив чисел (кандидатов) и указатель на текущий элемент. Вместо условия "дошли до листового узла" у нас условие "достигли определённой суммы target". 
 
-![](../img/backtracking/combinationSum.png)
+Есть ещё одно важное отличие в том, какие решения мы можем принимать.\
+Если мы достигли target - мы нашли результат. Если мы вышли за target - мы не нашли результат, но по пути дальше идти нельзя. Кроме того, каждый раз мы решаем, включаем ли мы данный элемент ещё раз или нет.
 
-Данная задача похожа на [Subsets](#subsets), разница лишь в том, как принимать решение.
-
-Основной метод остаётся очень похожим:
+Таким образом, наш dfs метод немного изменит сигнатуру:
 ```java
 public List<List<Integer>> combinationSum(int[] candidates, int target) {
     List<List<Integer>> result = new ArrayList<>();
@@ -101,7 +178,20 @@ public List<List<Integer>> combinationSum(int[] candidates, int target) {
 }
 ```
 
-И теперь видоизменённый метод принятия решений:
+Разбор от NeetCode: "[Combination Sum - Backtracking](https://www.youtube.com/watch?v=GBKI9VSKdGg)".
+
+Лучше всего логику можно увидеть на картинке:
+
+![](../img/backtracking/combinationSum.png)
+
+Тогда сам метод dfs сводится к тому, что нам нужно проверит 2 базовые ситуации:
+- Накопленная сумма равна target - нашли один из результатов
+- Сумма больше target или мы вышли за пределы массива - завершаем работу
+
+А сама работа заключается в том, что сначала мы добавляем элемент и запускаемся с добавленным элементом, а потом мы убираем элемент и запускаемся с пропуском. См. картинку выше.
+
+<details><summary>Решение</summary>
+
 ```java
 public void dfs(int index, int[] nums, List<List<Integer>> result, LinkedList<Integer> subset, int total, int target) {
     // Base case: total == target. We found the possible solution
@@ -121,14 +211,39 @@ public void dfs(int index, int[] nums, List<List<Integer>> result, LinkedList<In
     dfs(index + 1, nums, result, subset, total, target);
 }
 ```
+</details>
+
+Решение можно немного упростить. Не обязательно считать total и сравнивать target. Ведь можно просто вычитать из target, а достижение 0 воспринимать как конец обработки. Тогда:
+
+<details><summary>Решение 2</summary>
+
+```java
+public void dfs(int index, int[] nums, List<List<Integer>> result, LinkedList<Integer> subset, int target) {
+        // Base case: total == target. We found the possible solution
+        if (target == 0) {
+            result.add(new ArrayList<Integer>(subset));
+        }
+        // Base case: can't do anything with target more. Finish the path.
+        if (target <= 0 || index >= nums.length) return;
+
+        // Decision to include (add to path AND include to target)
+        subset.addLast(nums[index]);
+        dfs(index, nums, result, subset, target - nums[index]);
+        
+        // Decision to not include (remove from path and DO NOT change target)
+        subset.removeLast();
+        dfs(index + 1, nums, result, subset, target);
+    }
+```
+</details>
 
 ----
 
-## [↑](#home) <a id="combination2"></a> Combination Sum II
-Рассмотрим задачу [Combination Sum II](https://leetcode.com/problems/combination-sum-ii/):
+## [↑](#home) <a id="combination2"></a> 40. Combination Sum II
+Рассмотрим задачу [40. Combination Sum II](https://leetcode.com/problems/combination-sum-ii/):
 > Дана коллекция из кандидатов - чисел, из которых нужно попытаться получить target число при помощи суммирования. Каждое число можно использовать только один раз. И не должно быть одинаковых комбинаций.
 
-Разбор задачи от NeetCode: "[Combination Sum II](https://www.youtube.com/watch?v=rSA3t6BDDwg)"
+Разбор задачи от NeetCode: **"[Combination Sum II](https://www.youtube.com/watch?v=FOyRpNUSFeA)"**.
 
 Начало у нас такое же, за исключением того, что мы сортируем входные данные:
 ```java
@@ -139,8 +254,39 @@ public List<List<Integer>> combinationSum2(int[] candidates, int target) {
     return result;
 }
 ```
+Сортировка нам нужна для того, чтобы иметь возможность пропускать дубликаты, ведь одинаковые элементы будут стоять рядом друг с другом.
 
-Далее начинается расхождение:
+Само решение похоже на решение задачи [Combination Sum](#combination), но с некоторым доработками. Во-первых, т.к. нельзя повторять включение элемента, то мы всегда вызываем dfs на следующем индексе. Когда мы добавили элемент и обработали все пути с включённым вариантом и исключили его для дальнейшей обработки, нам нужно промотать индекс через все дубликаты, если они идут дальше.
+
+<details><summary>Решение 2</summary>
+
+```java
+public void dfs(int index, int[] nums, List<List<Integer>> result,          LinkedList<Integer> subset, int target) {
+    // Base case: total == target. We found the possible solution
+    if (target == 0) {
+        result.add(new ArrayList<Integer>(subset));
+    }
+    // Base case: can't do anything with target more. Finish the path.
+    if (target <= 0 || index >= nums.length) return;
+
+    // Decision to include (add to path AND include to target)
+    subset.addLast(nums[index]);
+    dfs(index + 1, nums, result, subset, target - nums[index]);
+
+    // Decision to not include (remove from path and DO NOT change target)
+    subset.removeLast();
+    while (index + 1 < nums.length && nums[index] == nums[index+1]) {
+        index = index + 1;
+    }
+    dfs(index + 1, nums, result, subset, target);
+}
+```
+</details>
+
+Существует ещё одно решение, [рассмотренное у NeetCode](https://www.youtube.com/watch?v=rSA3t6BDDwg), в котором используется цикл. Но оно кажется менее интуитивно понятным, поэтому оставляю просто для истории.
+
+<details><summary>Решение с циклом</summary>
+
 ```java
 public void dfs(int index, int[] nums, List<List<Integer>> result, LinkedList<Integer> subset, int target) {
     // Base case: We found the possible solution
@@ -149,29 +295,101 @@ public void dfs(int index, int[] nums, List<List<Integer>> result, LinkedList<In
     if (target <= 0) return;
 
     int prev = -1;
-    // Iterate over all elements. Each iteration is like train
+    // Iterate over all elements.
     for (int i = index; i < nums.length; i++) {
+        // Requirement: Skip duplicates
         if (prev == nums[i]) continue;
-        // Add element (carriage) to the "train"
+        // Add current element to the path
         subset.addLast(nums[i]);
-        // Send train with the carriage to other elements    
+        // Handle path continuation with INCLUDED element    
         dfs(i + 1, nums, result, subset, target - nums[i]);
-        // Remove element (carriage). Other iteration will handle element without it.
+        // Remove element from the path.
+        // Next iteration continues the path with EXCLUDED element 
         subset.removeLast();
+        // Remember element to skip duplicates (if any)
         prev = nums[i];   
     }
 }
 ```
+</details>
 
 ----
 
-## [↑](#home) <a id="permutations"></a> Permutations
-Рассмотрим задачу [Permutations](https://leetcode.com/problems/permutations/):
+## [↑](#home) <a id="subsets"></a> 78. Subsets
+Рассмотрим задачу [78. Subsets](https://leetcode.com/problems/subsets/):
+> Дан массив уникальных элементов. Нужно найти все подмассивы.
+
+Данная задача про Subsets. От **permutations (перестановок)** она отличается тем, что [1,2] это тоже самое, что [2,1] и таких повторений быть не должно. Кроме того, от [Combination Sum](#combination) она отличается тем, что использовав элемент мы не можем его включать больше в наш путь.
+
+Понять задачу нам снова поможет NeetCode: **[Subsets - Backtracking](https://www.youtube.com/watch?v=REOH22Xwdkk)**.
+
+![](../img/backtracking/subsets.png)
+
+У нас нет ограничения по сумме, мы можем лишь принимать решение: включать элемент или не включать, что очень похоже на **DFS** подход.
+
+Тогда:
+```java
+public List<List<Integer>> subsets(int[] nums) {    
+    List<List<Integer>> result = new ArrayList<>();
+    dfs(0, nums, result, new LinkedList<>());
+    return result;
+}
+```
+
+Само решение очень похоже на [Combination Sum](#combination). Базовый случай: индекс вышел за пределы массива, а следовательно все решения приняты (т.к. если нет элементов то нечего исключать или включать в путь). В противном случае мы включаем элемент и вызываем dfs дальше на следующем индексе. Далее, когда к нам вернётся исполенение мы исключаем элемент и снова запускаем dfs, но уже с путём, в котором нет элемента.
+
+<details><summary>Решение</summary>
+
+```java
+public void dfs(int index, int[] nums, List<List<Integer>> result, LinkedList<Integer> subset) {
+    // Base case: out or array, all decisions were made
+    if (index >= nums.length) {
+        result.add(new ArrayList<Integer>(subset));
+        return;
+    }
+    // Decision to include
+    subset.addLast(nums[index]);
+    dfs(index + 1, nums, result, subset);
+    // Decision to not include
+    subset.removeLast();
+    dfs(index + 1, nums, result, subset);
+}
+```
+</details>
+
+----
+
+## [↑](#home) <a id="subsets2"></a> 90. Subsets II
+Рассмотрим задачу [90. Subsets II](https://leetcode.com/problems/subsets-ii/):
+> Дан массив элементов, где элементы могут повторяться. Нужно найти все подмассивы.
+
+Разбор от NeetCode: [Subsets II - Backtracking](https://www.youtube.com/watch?v=Vn2v6ajA7U0).
+
+Подход с избеганием дубликатов похож на задачу [Combination Sum II](#combination2), т.к. мы перед всеми действиями сортируем входящий массив, что даёт расположение дублей рядом друг с другом:
+```java
+public List<List<Integer>> subsets(int[] nums) {    
+    Arrays.sort(nums);
+```
+
+По аналогии с [Combination Sum II](#combination2) чтобы пропускать дубли мы после удаления элемента из пути "скролим" массив до тех пор, пока не найдём следующий недублирующийся элемент (т.е. пропускаем дубликаты):
+```java
+// Decision to not include
+subset.removeLast();
+while (index + 1 < nums.length && nums[index] == nums[index + 1]) {
+    index++;
+}
+dfs(index + 1, nums, result, subset);
+```
+
+----
+
+## [↑](#home) <a id="permutations"></a> 46. Permutations
+Рассмотрим задачу [46. Permutations](https://leetcode.com/problems/permutations/):
 > Дан массив из уникальных чисел. Найти все возможные варианты из них.
 
 Разбор задачи от Nikhil Lohia: [Permutations](https://www.youtube.com/watch?v=H232aocj7bQ).
 
-Решение:
+Как и всегда в backtracking решении рекурсивно вызываем backtrack метод:
 ```java
 public List<List<Integer>> permute(int[] nums) {
     List<List<Integer>> result = new ArrayList<>();
@@ -181,9 +399,23 @@ public List<List<Integer>> permute(int[] nums) {
 }
 ```
 
-Сам же backtracking выглядит следующим образом:
+Как будет выглядеть решение? \
+Базовый случай: размер обрабатываемого пути равен количеству элементов. Это значит, что все элементы обработаны, можем путь добавлять в результаты:
+```java
+// BaseCase: path size is the same as numbers count
+if (tmp.size() == nums.length) {
+    result.add(new ArrayList<>(tmp));
+    return;
+}
+```
+
+Дальше нам нужно начинать путь от каждого элемента в массиве, т.е. в цикле будем по ним идти. Если число уже есть в пути, то просто пропускаем итерацию, т.к. массив из уникальных чисел и значит, что это число уже обработаны ранее. Если же число не было обработано - добавляем его в путь и запускаем backtrack на новом пути. Перед заходом на новую итерацию удаляем из пути элемент.
+
+<details><summary>Решение</summary>
+
 ```java
 public void backtrack(List<List<Integer>> result, List<Integer> tmp, int[] nums) {
+    // BaseCase: path size is the same as numbers count
     if (tmp.size() == nums.length) {
         result.add(new ArrayList<>(tmp));
         return;
@@ -195,7 +427,7 @@ public void backtrack(List<List<Integer>> result, List<Integer> tmp, int[] nums)
             
         // Add a number to the current permutation
         tmp.add(number);
-            
+
         backtrack(result, tmp, nums);
 
         // Remove last element (i.e. current number)
@@ -205,6 +437,7 @@ public void backtrack(List<List<Integer>> result, List<Integer> tmp, int[] nums)
     }
 }
 ```
+</details>
 
 Разбор от NeetCode: [Backtracking: Permutations](https://www.youtube.com/watch?v=s7AvT7cGdSo).
 
@@ -264,8 +497,8 @@ for (int i = 0; i < current.size(); i++) {
 
 ----
 
-## [↑](#home) <a id="permutations2"></a> Permutations II
-Рассмотрим задачу [Permutations II](https://leetcode.com/problems/permutations-ii/):
+## [↑](#home) <a id="permutations2"></a> 47. Permutations II
+Рассмотрим задачу [47. Permutations II](https://leetcode.com/problems/permutations-ii/):
 > Дан массив из уникальных чисел. Найти все возможные варианты из них. Могут быть дубли.
 
 Разбор от Nikhil Lohia: [Permutations 2](https://www.youtube.com/watch?v=YW5F0WqBBWY)
@@ -311,8 +544,8 @@ private void backtrack(List<List<Integer>> resultList, ArrayList<Integer> tempLi
 
 ----
 
-## [↑](#home) <a id="wordSearch"></a> Word Search
-Рассмотрим задачу [Word Search](https://leetcode.com/problems/word-search/).
+## [↑](#home) <a id="wordSearch"></a> 79. Word Search
+Рассмотрим задачу [79. Word Search](https://leetcode.com/problems/word-search/).
 
 Разбор от NeetCode: "[Word Search - Backtracking](https://www.youtube.com/watch?v=pfiQ_PS1g8E)".\
 Разбор от Nick White: "[LeetCode Word Search Solution Explained](https://www.youtube.com/watch?v=m9TrOL1ETxI)"
@@ -356,29 +589,125 @@ public boolean search(int row, int column, int letter, char[][] board, String wo
 
 ----
 
-## [↑](#home) <a id="casePermutation"></a> Letter Case Permutation
-Рассмотрим задачу [Letter Case Permutation](https://leetcode.com/problems/letter-case-permutation/).
+## [↑](#home) <a id="N-Queens"></a> 51. N-Queens
+Рассмотрим задачу [51. N-Queens](https://leetcode.com/problems/n-queens/description/):
+> Дана размерность N для доски NxN. Нужно вернуть все возможные расположения n королев на доске, при котором фигуры не могут атаковать друг друга.
 
-Подход к решению можно посмотреть в [Решаем Литкод : Letter Case Permutation](https://www.youtube.com/watch?v=wYO4ospshr8)
+Разбор задачи от NeetCode: "[N-Queens - Backtracking ](https://www.youtube.com/watch?v=Ph95IHmRp5M)".
 
-Решение задачи:
+Для начала, нам понадобится метод, чтобы подготовить доску:
 ```java
-List<String> result = new ArrayList<>();
-public List<String> letterCasePermutation(String s) {
-    search(s, "", 0);
-    return result;
+public char[][] prepareEmptyBoard(int n) {
+    char[][] board = new char[n][n];
+    for (int row = 0; row < n; row++) {
+        for (int col = 0; col < n; col++) {
+            board[row][col] = '.';
+        }
+    }
+    return board;
 }
+```
 
-public void search(String s, String cur, int ind) {
-    if (ind == s.length()) {
-        result.add(cur);
+Кроме этого нам понадобится метод проверки, можно ли (безопасно ли) поставить фигуру в ячейку в определённой строке и определённой колонке:
+```java
+private boolean isSafe(int r, int c, char[][] board) {
+    // Check rows above, the same column
+    // Rows below are empty, don't check them
+    for (int i = r - 1; i >= 0; i--) {
+        if (board[i][c] == 'Q') return false;
+    }
+    // Get cell above and before. Check diag to the left
+    for (int i = r - 1, j = c - 1; i >= 0 && j >= 0; i--, j--) {
+        if (board[i][j] == 'Q') return false;
+    }
+    // Get cell above and after. Check diag to the right
+    for (int i = r - 1, j = c + 1; i >= 0 && j < board.length; i--, j++) {
+        if (board[i][j] == 'Q') return false;
+    }
+    return true;
+}
+```
+
+После этого, вызовем наш backtracking метод из основного метода:
+```java
+public List<List<String>> solveNQueens(int n) {
+    List<List<String>> res = new ArrayList<>();
+    char[][] board = prepareEmptyBoard(n);
+    backtrack(0, board, res);
+    return res;
+}
+```
+
+Осталось описать лишь наш backtracking метод:
+```java
+private void backtrack(int r, char[][] board, List<List<String>> res) {
+    // Base case: Row is out of board == all rows was filled
+    if (r == board.length) {
+        List<String> variant = new ArrayList<>();
+        for (char[] row : board) {
+            variant.add(new String(row));
+        }
+        res.add(variant);
         return;
     }
-    if (Character.isDigit(s.charAt(ind))) {
-        search(s, cur + s.charAt(ind), ind+1);
-    } else {
-        search(s, cur + Character.toUpperCase(s.charAt(ind)), ind+1);
-        search(s, cur + Character.toLowerCase(s.charAt(ind)), ind+1);
+    // Iterate over all columns inside the same row
+    for (int c = 0; c < board.length; c++) {
+        if (isSafe(r, c, board)) {
+            // Option 1: place queen and call recursion for the next row
+            board[r][c] = 'Q';
+            backtrack(r + 1, board, res);
+            // Option 2: Leave this column empty and go to the next column
+            board[r][c] = '.';
+        }
+    }
+}
+```
+
+----
+
+## [↑](#home) <a id="palindrome"></a> 131. Palindrome partitioning
+Рассмотрим задачу [131. Palindrome partitioning](https://leetcode.com/problems/palindrome-partitioning/):
+> Дана строка. Нужно вернуть все варианты того, как можно это строку разбить на палиндромы.
+
+Разбор задачи от NeetCode: **"[Palindrome partitioning](https://www.youtube.com/watch?v=3jvWodd7ht0)"**.
+
+Для решения нам, конечно же, понадобится метод для определения палиндромности строки:
+```java
+private boolean isPali(String s, int l, int r) {
+    while (l < r) {
+        if (s.charAt(l) != s.charAt(r)) return false;
+        l++;
+        r--;
+    }
+    return true;
+}
+```
+
+Основной метод, как обычно, запускает рекурсивный метод:
+```java
+public List<List<String>> partition(String s) {
+    List<List<String>> res = new ArrayList<>();
+    List<String> part = new ArrayList<>();
+    dfs(0, s, part, res);
+    return res;
+}
+```
+
+Само решение:
+```java
+private void dfs(int i, String s, List<String> part, List<List<String>> res) {
+    // Base case: Index is out of bounds. Add a new result
+    if (i >= s.length()) {
+        res.add(new ArrayList<>(part));
+        return;
+    }
+
+    for (int j = i; j < s.length(); j++) {
+        if (isPali(s, i, j)) {
+            part.add(s.substring(i, j + 1));
+            dfs(j + 1, s, part, res);
+            part.remove(part.size() - 1);
+        }
     }
 }
 ```
